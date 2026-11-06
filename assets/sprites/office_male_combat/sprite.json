@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "app": "sprite-gen",
+    "version": "1.0",
+    "relatedMultiPacks": ["idle/spritesheet.json"]
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "music": {
+    "title": "Overtime Overdrive",
+    "task_id": "temp_59fa48cc-c007-469e-8175-27648b700224",
+    "music_id": "54ac76a8-cd62-4ccc-9460-cc43421bdcd1",
+    "generator": "text_to_music / chirp-hawk",
+    "requested_bpm": 128,
+    "instrumental": true,
+    "resource": "audio/overtime_overdrive.ogg",
+    "duration": 151.212979,
+    "processing": "Original generated audio retained; loudnorm -18 LUFS / -1.5 dBTP, stereo 48 kHz Vorbis q5. No local synthesis."
+  },
+  "sfx_generator": "batch_sound_effects / Doubao Seed Audio; 11 successes, 0 failures",
+  "sounds": [
+    {
+      "name": "office_keyboard_swing",
+      "resource": "audio/sfx/office_keyboard_swing.wav",
+      "source_seconds": 0.336,
+      "trim_start_seconds": 0.019,
+      "final_seconds": 0.275,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -16.71
+    },
+    {
+      "name": "office_keyboard_hit",
+      "resource": "audio/sfx/office_keyboard_hit.wav",
+      "source_seconds": 0.432,
+      "trim_start_seconds": 0.025,
+      "final_seconds": 0.283,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -10.48
+    },
+    {
+      "name": "office_stapler_click",
+      "resource": "audio/sfx/office_stapler_click.wav",
+      "source_seconds": 0.24,
+      "trim_start_seconds": 0.034,
+      "final_seconds": 0.148,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -16.73
+    },
+    {
+      "name": "office_player_hurt",
+      "resource": "audio/sfx/office_player_hurt.wav",
+      "source_seconds": 0.336,
+      "trim_start_seconds": 0.019,
+      "final_seconds": 0.275,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -13.47
+    },
+    {
+      "name": "office_rage_burst",
+      "resource": "audio/sfx/office_rage_burst.wav",
+      "source_seconds": 0.72,
+      "trim_start_seconds": 0.016,
+      "final_seconds": 0.583,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -13.77
+    },
+    {
+      "name": "office_xp_pickup",
+      "resource": "audio/sfx/office_xp_pickup.wav",
+      "source_seconds": 0.24,
+      "trim_start_seconds": 0.022,
+      "final_seconds": 0.175,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -11.56
+    },
+    {
+      "name": "office_level_up",
+      "resource": "audio/sfx/office_level_up.wav",
+      "source_seconds": 0.84,
+      "trim_start_seconds": 0.016,
+      "final_seconds": 0.715,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -14.88
+    },
+    {
+      "name": "office_footstep_walk",
+      "resource": "audio/sfx/office_footstep_walk.wav",
+      "source_seconds": 0.24,
+      "trim_start_seconds": 0.106,
+      "final_seconds": 0.088,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -17.94
+    },
+    {
+      "name": "office_footstep_run",
+      "resource": "audio/sfx/office_footstep_run.wav",
+      "source_seconds": 0.24,
+      "trim_start_seconds": 0.016,
+      "final_seconds": 0.109,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -14.33
+    },
+    {
+      "name": "office_door_open",
+      "resource": "audio/sfx/office_door_open.wav",
+      "source_seconds": 0.84,
+      "trim_start_seconds": 0.079,
+      "final_seconds": 0.58,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -20.75
+    },
+    {
+      "name": "office_ui_confirm",
+      "resource": "audio/sfx/office_ui_confirm.wav",
+      "source_seconds": 0.24,
+      "trim_start_seconds": 0.109,
+      "final_seconds": 0.103,
+      "peak_dbfs": -1.72,
+      "processing": "3ms RMS silence trim; 5ms pre-attack; up to 25ms target tolerance; 2ms/12ms edge fades; peak normalization only; 48k mono PCM16.",
+      "rms_dbfs": -12.94
+    }
+  ]
+}

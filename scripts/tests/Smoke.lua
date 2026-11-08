@@ -68,7 +68,8 @@ local function TestRules()
     g.hitStop = 0
     g.xp = g.xpNeed
     Step(g, 0.05)
-    Check(g.mode == "upgrade" and #g.choices == 3, "经验升级三选一")
+    Check(g.mode == "upgrade" and #g.choices == 5, "经验升级五选一")
+    Check(g.rerollsLeft == 3 and Game.RerollChoices(g) and g.rerollsLeft == 2, "增益刷新消耗每局额度")
     local before = g.time
     Step(g, 1)
     Check(g.time == before, "强化弹窗冻结时间")
@@ -92,16 +93,23 @@ local function TestRules()
     Check(g.mode == "route" and not Game.Travel(g, 8), "路线图拒绝未连接节点")
     Check(Game.Travel(g, 3) and g.room.kind == "elite" and g.totalWaves == 3, "可以选择精英分支")
     Clear(g); Game.Choose(g, 1); Game.OpenRoute(g); Game.Travel(g, 4)
-    Check(g.mode == "shop" and #g.shopItems == 3 and #g.enemies == 0, "商店是独立安全房间")
-    g.coins, g.stapler = 0, 0
-    Check(not Game.Buy(g, 2), "余额不足不能购买")
-    g.coins = 100
-    Check(Game.Buy(g, 2) and g.coins == 55 and g.stapler == 1, "商店扣币并强化武器")
-    Check(not Game.Buy(g, 2) and g.coins == 55, "同一商品不能重复购买")
+    Check(g.mode == "shop" and #g.shopItems == 5 and #g.enemies == 0, "商店是独立安全房间")
+    Check(g.shopItems[1].id == "heal", "商店首件固定为体力恢复")
+    g.coins, g.stapler, g.player.hp = 100, 0, 10
+    Check(Game.Buy(g, 1) and g.coins == 70 and g.player.hp > 10, "商店扣币并恢复精力")
+    Check(not Game.Buy(g, 1) and g.coins == 70, "同一商品不能重复购买")
+    Check(g.shopRerollsLeft == 2 and Game.RerollShop(g) and g.shopRerollsLeft == 1, "商店刷新消耗额度")
+    Check(#g.shopItems == 5 and g.shopItems[1].id == "heal", "刷新后仍保留体力恢复")
     Game.LeaveShop(g)
     Check(g.roomCleared and g.mode == "playing", "不强制消费也能离开商店")
     Game.OpenRoute(g); Game.Travel(g, 5)
     Check(g.mode == "event" and #g.eventChoices == 3, "每层包含事件区")
+    local rerollRun = originalNew()
+    Game.EnterRoom(rerollRun, 5)
+    Check(rerollRun.mode == "event" and rerollRun.eventRerollsLeft == 1, "事件刷新额度每局为一次")
+    Check(Game.RerollEvent(rerollRun) and rerollRun.eventRerollsLeft == 0 and #rerollRun.eventChoices == 3,
+        "事件刷新消耗额度并换一条事件")
+    Check(not Game.RerollEvent(rerollRun) and rerollRun.eventRerollsLeft == 0, "事件刷新用尽后不再生效")
     local coins = g.coins
     Check(Game.ResolveEvent(g, 2) and g.coins == coins + 50, "事件奖励正确发放")
     Check(not Game.ResolveEvent(g, 2) and g.coins == coins + 50, "事件不能重复领取")

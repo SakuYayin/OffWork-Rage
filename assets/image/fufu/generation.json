@@ -1,0 +1,104 @@
+{
+  "date": "2026-11-07",
+  "tool": "Codex built-in imagegen",
+  "modelId": "not exposed",
+  "records": [
+    {
+      "id": "fufu",
+      "prompt": "Production GAME ANIMATION SPRITE SHEET, use attached approved character as identity reference. Keep same adult female employee, chestnut side braid paw clip, mint cardigan, apricot ribbon, navy skirt shorts, cream shoes, pet treat bag. Exactly 4 columns x8 rows, 32 frames. Rows:1 front idle breathing;2 side right walk alternating feet;3 front walk toward viewer;4 back walk away;5 side summon: lift paw cake, warm paw sparkle, release, lower;6 bulb throw: reach bag, windup, release EMPTY hand, recover;7 hurt/recover without gore;8 happy victory wave. She never swings a weapon or punches. EXACTLY 4 equal-width columns and 8 equal-height rows. Every row contains FOUR consecutive distinct animation frames of the stated motion, NOT four unrelated illustrations. One actor in each cell; consistent scale and baseline, character centered within each cell; 18 percent clear transparent gutters on every edge, no overlap and nothing cropped. Sprite is small chibi detailed pixel art with crisp visible pixel clusters, navy outlines and limited shaded palette, cute friendly personality. ALL backgrounds truly alpha transparent, no platform, no shadows, no text labels or grid lines. Maintain anatomy and outfit across all frames. Side frames face RIGHT, front faces viewer, back faces away. Exact grid is essential. 32 individual frames.",
+      "rows": 8,
+      "cols": 4,
+      "reference": "符符-角色设定.png",
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-723114a2-0b7a-4988-a44a-0d53a383042e.png"
+    },
+    {
+      "id": "maple",
+      "prompt": "Production GAME ANIMATION SPRITE SHEET, use attached approved character as identity reference. Preserve sweet big round gold eyes, tiny rounded gold dragon horns, charcoal plum kitten, flower collar, one white front paw, heart chest, maple tail. NO fierce face or teeth. Rows:1 side right idle;2 side right run;3 front walk;4 back walk;5 playful triple claw swipe right;6 hurt then curl down and gentle vanish-ready pose. EXACTLY 4 equal-width columns and 6 equal-height rows. Every row contains FOUR consecutive distinct animation frames of the stated motion, NOT four unrelated illustrations. One actor in each cell; consistent scale and baseline, character centered within each cell; 18 percent clear transparent gutters on every edge, no overlap and nothing cropped. Sprite is small chibi detailed pixel art with crisp visible pixel clusters, navy outlines and limited shaded palette, cute friendly personality. ALL backgrounds truly alpha transparent, no platform, no shadows, no text labels or grid lines. Maintain anatomy and outfit across all frames. Side frames face RIGHT, front faces viewer, back faces away. Exact grid is essential. 24 individual frames.",
+      "rows": 6,
+      "cols": 4,
+      "reference": "枫叶猫-v4-可爱原创.png",
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-1b74de82-7f61-4125-bf76-6c2bf99743f1.png"
+    },
+    {
+      "id": "water",
+      "prompt": "Production GAME ANIMATION SPRITE SHEET, use attached approved character as identity reference. Preserve cute ROUND black kitten, huge aqua eyes, tiny aqua horns, forehead droplet, bubble beads and aqua tail ring. No serpentine dragon. Rows:1 side right idle;2 side right run;3 front walk;4 back walk;5 puff cheeks then spray thin right-facing water stream then relax;6 hurt then curl down and gentle vanish-ready pose. EXACTLY 4 equal-width columns and 6 equal-height rows. Every row contains FOUR consecutive distinct animation frames of the stated motion, NOT four unrelated illustrations. One actor in each cell; consistent scale and baseline, character centered within each cell; 18 percent clear transparent gutters on every edge, no overlap and nothing cropped. Sprite is small chibi detailed pixel art with crisp visible pixel clusters, navy outlines and limited shaded palette, cute friendly personality. ALL backgrounds truly alpha transparent, no platform, no shadows, no text labels or grid lines. Maintain anatomy and outfit across all frames. Side frames face RIGHT, front faces viewer, back faces away. Exact grid is essential. 24 individual frames.",
+      "rows": 6,
+      "cols": 4,
+      "reference": "水龙龙-v4-可爱原创.png",
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-10dd3523-4605-4686-b774-1cfab1246c21.png"
+    },
+    {
+      "id": "dan",
+      "prompt": "Production GAME ANIMATION SPRITE SHEET, use attached approved character as identity reference. Preserve cute FLUFFY BLACK PUPPY, both UPRIGHT EARS, short tiny muzzle close to face, brown round eyes, tiny legs, fluffy tail, normal FOUR LEGGED animal. NO horns, jewelry, clothes, armor or weapon. Rows:1 side right idle;2 side right trot;3 front walk;4 back walk;5 natural protective crouch paws planted then recover, NO shield prop;6 hurt then curl down and gentle vanish-ready pose. EXACTLY 4 equal-width columns and 6 equal-height rows. Every row contains FOUR consecutive distinct animation frames of the stated motion, NOT four unrelated illustrations. One actor in each cell; consistent scale and baseline, character centered within each cell; 18 percent clear transparent gutters on every edge, no overlap and nothing cropped. Sprite is small chibi detailed pixel art with crisp visible pixel clusters, navy outlines and limited shaded palette, cute friendly personality. ALL backgrounds truly alpha transparent, no platform, no shadows, no text labels or grid lines. Maintain anatomy and outfit across all frames. Side frames face RIGHT, front faces viewer, back faces away. Exact grid is essential. 24 individual frames.",
+      "rows": 6,
+      "cols": 4,
+      "reference": "丹旺旺-v6-立耳短口鼻.png",
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-e6ba97f9-b435-4f0f-835c-6dd203ab26e9.png"
+    },
+    {
+      "id": "cat",
+      "prompt": "Production GAME ANIMATION SPRITE SHEET, use attached approved character as identity reference. Preserve round cute orange white tabby kitten big round green eyes, short legs. No horns. Rows:1 side right idle;2 side right run;3 front walk;4 back walk;5 playful single paw swipe right;6 hurt then curl down and gentle vanish-ready pose. EXACTLY 4 equal-width columns and 6 equal-height rows. Every row contains FOUR consecutive distinct animation frames of the stated motion, NOT four unrelated illustrations. One actor in each cell; consistent scale and baseline, character centered within each cell; 18 percent clear transparent gutters on every edge, no overlap and nothing cropped. Sprite is small chibi detailed pixel art with crisp visible pixel clusters, navy outlines and limited shaded palette, cute friendly personality. ALL backgrounds truly alpha transparent, no platform, no shadows, no text labels or grid lines. Maintain anatomy and outfit across all frames. Side frames face RIGHT, front faces viewer, back faces away. Exact grid is essential. 24 individual frames.",
+      "rows": 6,
+      "cols": 4,
+      "reference": "普通猫猫-v2-圆脸像素.png",
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-f44b1dd6-0366-4abe-abee-90c965a81b40.png"
+    },
+    {
+      "id": "dog",
+      "prompt": "Production GAME ANIMATION SPRITE SHEET, use attached approved character as identity reference. Preserve cute cream brown ordinary puppy, orange collar, round eyes, thick small body, soft floppy ears, friendly mouth. No horns no armor. Rows:1 side right idle;2 side right trot;3 front walk;4 back walk;5 short natural bite action right without scary fangs;6 hurt then curl down and gentle vanish-ready pose. EXACTLY 4 equal-width columns and 6 equal-height rows. Every row contains FOUR consecutive distinct animation frames of the stated motion, NOT four unrelated illustrations. One actor in each cell; consistent scale and baseline, character centered within each cell; 18 percent clear transparent gutters on every edge, no overlap and nothing cropped. Sprite is small chibi detailed pixel art with crisp visible pixel clusters, navy outlines and limited shaded palette, cute friendly personality. ALL backgrounds truly alpha transparent, no platform, no shadows, no text labels or grid lines. Maintain anatomy and outfit across all frames. Side frames face RIGHT, front faces viewer, back faces away. Exact grid is essential. 24 individual frames.",
+      "rows": 6,
+      "cols": 4,
+      "reference": "普通狗狗-召唤物设定.png",
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-125d7612-87ba-4445-9cc6-ecb79d33918c.png"
+    },
+    {
+      "id": "effects",
+      "prompt": "Production pixel-art combat EFFECT atlas for cute animal summoner office game. EXACT 4 columns x8 rows,32 frames, four sequential frames in each row: row1 warm golden pawprint summon ring expanding then dissolving with cake crumbs; row2 three tiny peach claw swipe arcs sweeping right; row3 narrow coherent cyan waterjet growing right then spray fading; row4 thin zigzag cyan electric chain between two endpoints, not a lightbulb or weapon; row5 soft white-yellow flash star expanding fading; row6 three tiny glass shards scattering impact, no intact bulb; row7 small pale cyan protective crescent pulsing, no armor or dog; row8 soft paw-shaped departure puff shrinking. Each frame fully separate and contained, 20% transparent padding, consistent anchors. NO characters, text, grid, icons for unrelated weapons, no noisy large halos. Crisp detailed pixel art true transparent background, safe readable effects not a full screen poster.",
+      "cols": 4,
+      "rows": 8,
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-40c4159b-19d3-416e-a606-39476a09d1ee.png"
+    },
+    {
+      "id": "status",
+      "prompt": "Production small STATUS EFFECT icon animation atlas, EXACT4 columns x4rows16frames, every row four sequential subtle animated frames. Row1 three turquoise WET water droplets dripping; row2 BLEED stylized small crimson droplet pulse (no gore); row3 STUN three tiny golden stars circling empty center; row4 REPLACEMENT indication warm mint pawprint with tiny curved clockwise arrow, pulse. Detailed cute pixel art small game readable at24px, hard square pixels, navy contour where appropriate. Each cell centered consistent size, 25% clear padding all around, no touching othercells, alpha transparent, no text, no backgrounds, no characters.",
+      "cols": 4,
+      "rows": 4,
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-c05f4dfc-2efd-4b68-bf43-9ff3b5119746.png"
+    },
+    {
+      "id": "buffs",
+      "prompt": "Polished PIXEL ART BUFF ICON ATLAS, EXACT3columns4rows12icons, true transparent background, wide clear gutters, refined pixel craft for cute animal summoner office game. Row1: paw-shaped cake with small clock; mint pet firstaid box paw emblem; grooming brush with paw and tiny tooth. Row2: adorable BLACK MAPLE KITTEN with tiny gold horn buds, huge round gold eyes, flowercollar and maple tail plus small peach claw trails; cute round BLACK WATER KITTEN with tiny aqua horns, big aqua eyes, forehead droplet and bubble beads spraying water into bowl; NATURAL FLUFFY BLACK PUPPY with two upright ears, short tucked muzzle, brown round eyes and tiny mint protective crescent NO horn/clothes/armor/weapon. Row3: two dogchew biscuits; waterproof electric powerstrip with cyan bulb; three wet pawprints linked by cyan arcs. Row4: pearlwhite flashbulb with little sleeping eyemask; folded cream mint paw blanket; pawshape charge clock with3 tinycake dots. Cute friendly expressions no fiercecats, no generic placeholder shapes. Clean sharp pixel contours and rich but restrained colors. NO labels no text no grid or tiles, no noisy halos.",
+      "cols": 3,
+      "rows": 4,
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-b2587110-8033-4e0c-b6e8-65fbbbe5a5fb.png"
+    },
+    {
+      "id": "fufu",
+      "prompt": "Edit ONLY ROW SIX (counting top row as1) of this 4column8row character sprite sheet. Row six must show THROWING A LIGHTBULB: frame1 reach into bag, frame2 holds glass golden-filament screw-base LIGHTBULB, frame3 extend hand with ONE lightbulb leaving fingertips (no cake), frame4 lower EMPTY hand. The paw cake is NOT thrown and NOT floating away. Preserve exactly ALL OTHER ROWS, girl's identity/outfit, style, full sheet dimensions and grid4x8. No new elements outside the four row6cells. Keep true transparent background and consistent sprite baseline. Never change summoning row5: that row keeps cake.",
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-7ab4db56-5a79-49a8-b3f3-695a0da13c4d.png",
+      "correction": true
+    },
+    {
+      "id": "cat",
+      "prompt": "Remove ONLY the gray/brown background from this 4column6row orange kitten SPRITE SHEET. Preserve every kitten frame, exact24frame grid layout, pixel style, colors and size. Background outside sprites MUST fully alpha0 transparent, no fog halos, no shadow plate. Do not crop objects or change the 4x6 cell arrangement. No added text.",
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-8f9960f8-1e5c-4c12-b12b-561a103277ec.png",
+      "correction": true
+    },
+    {
+      "id": "buffs",
+      "prompt": "Clean this EXACT3column4row12icon atlas. Preserve all12 pixel art subjects, positions, details and colors. REMOVE ALL gray/brown colored background and diffuse glows around icons; outside subjects must fully alpha0 transparent. Keep just crisp individual icons, no fog, no tile backgrounds, no shadow plates, generous empty transparent gutters. No crop and no rearrange. The puppy row2col3 must stay natural black upright-ear dog without necklace: tiny green crescent is floating separate protection light not a collar.",
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-61ede83a-54d6-4f68-9576-2cba2aa9f3fd.png",
+      "correction": true
+    },
+    {
+      "id": "effects",
+      "prompt": "Clean this EXACT4column8row32frame effect atlas. Preserve all32 distinct effects and their exact row ordering and frame progression. REMOVE large cloudy/dithered halos and background particles connecting neighboring cells. Give each effect a crisp pixel shape with restrained local glow and full alpha0 transparent gutters, at least12%cellpadding on every side; shrink each effect within its owncell if needed so no touch. Keep gold summon/claw, cyanwater/electric, flash,glass,guard,pawdepart respective8rows. No text or background. Lastrow effects must not touch imagebottom.",
+      "source": "C:\\Users\\压音\\.codex\\generated_images\\01a1b24e-bc2e-7b52-895a-19211226b785\\exec-8600465a-e0a8-4afe-bb41-c2aeb5aabcb7.png",
+      "correction": true
+    }
+  ],
+  "reused": {
+    "items": "design/fufu-2026-11-07/宠物糕点与灯泡-武器设定.png",
+    "portrait": "design/fufu-2026-11-07/符符-角色设定.png"
+  }
+}

@@ -17,14 +17,29 @@ local ActionState = {}
 ---@field targetX number 咖啡瞄准点，不追踪隔墙敌人
 ---@field targetY number
 
+-- scaled=true 的动作吃攻速缩放（g.attackSpeed）；以前只有 keyboard 硬编码，S2 改为白名单。
 local TIMINGS = {
-    keyboard = { windup = 0.09, impactAt = 0.10, impactEnd = 0.20, duration = 0.42 },
+    summon={windup=.25,impactAt=.35,impactEnd=.45,duration=.6},
+    bulb={windup=.12,impactAt=.18,impactEnd=.28,duration=.45},
+    folder = {windup=.35,impactAt=.42,impactEnd=.62,duration=1.15,scaled=true},
+    binary = {windup=.035,impactAt=.055,impactEnd=.10,duration=.20,scaled=true},
+    keyboard = { windup = 0.09, impactAt = 0.10, impactEnd = 0.20, duration = 0.42, scaled = true },
     stapler = { windup = 0.05, impactAt = 0.07, impactEnd = 0.12, duration = 0.24 },
     coffee = { windup = 0.12, impactAt = 0.16, impactEnd = 0.26, duration = 0.50 },
     burst = { windup = 0.10, impactAt = 0.12, impactEnd = 0.28, duration = 0.60 },
     hurt = { windup = 0, impactAt = 0, impactEnd = 0.06, duration = 0.22 },
+    -- S2 新武器（02-weapons-buffs-ults.md §4.1）
+    thermos = { windup = 0.16, impactAt = 0.18, impactEnd = 0.30, duration = 0.72, scaled = true },
+    paperclip = { windup = 0.06, impactAt = 0.08, impactEnd = 0.14, duration = 0.26, scaled = true },
+    pie = { windup = 0.42, impactAt = 0.46, impactEnd = 0.62, duration = 1.05 },
+    -- 减半后未启用，但定义保留：后续翻开 enabled 即可用（07-halved-plan.md §2.6）
+    laser = { windup = 0.22, impactAt = 0.28, impactEnd = 0.90, duration = 1.20, scaled = true },
+    extinguisher = { windup = 0.30, impactAt = 0.32, impactEnd = 0.52, duration = 0.90, scaled = true },
+    reload = { windup = 0.60, impactAt = 0.60, impactEnd = 0.90, duration = 1.30 },
 }
-local ORDER = { "burst", "hurt", "keyboard", "stapler", "coffee" }
+-- 追加不插队：新动作排在咖啡之后，保证既有「同帧三武器独立起手」断言不变。
+local ORDER = { "burst", "hurt", "summon", "bulb", "folder", "binary", "keyboard", "stapler", "coffee",
+    "reload", "thermos", "paperclip", "laser", "extinguisher", "pie" }
 local LOOPS = { idle = 1.2, walk = 0.72, run = 0.48 }
 ActionState.timings = TIMINGS
 
@@ -76,15 +91,21 @@ end
 function ActionState.Start(g, name, faceX, faceY, rate)
     local timing = TIMINGS[name]
     if not timing or ActionState.Active(g, name) then return nil end
-    local speed = name == "keyboard" and math.max(0.1, rate or 1) or 1
-    local impactAt = math.max(name == "keyboard" and 0.075 or 0, timing.impactAt / speed)
+    local scaled = timing.scaled == true
+    local speed = scaled and math.max(0.1, rate or 1) or 1
+    local impactAt = math.max(scaled and 0.075 or 0, timing.impactAt / speed)
     local impactEnd = math.max(impactAt + 0.05, timing.impactEnd / speed)
     local duration = math.max(impactEnd + 0.10, timing.duration / speed)
+    if name=="binary"then
+        impactAt=math.max(.035,timing.impactAt/speed)
+        impactEnd=math.max(impactAt+.03,timing.impactEnd/speed)
+        duration=math.max(.16,impactEnd+.06,timing.duration/speed)
+    end
     local length = math.sqrt(faceX * faceX + faceY * faceY)
     if length < 0.001 then faceX, faceY, length = 1, 0, 1 end
     ---@type OfficeAction
     local action = { name = name, time = 0, duration = duration,
-        windup = math.min(impactAt, math.max(name == "keyboard" and 0.045 or 0, timing.windup / speed)),
+        windup = math.min(impactAt, math.max(scaled and 0.045 or 0, timing.windup / speed)),
         impactAt = impactAt, impactEnd = impactEnd, faceX = faceX / length, faceY = faceY / length,
         serial = Serial(g), impactDone = name == "hurt", phase = "windup",
         targetX = g.player.x, targetY = g.player.y }

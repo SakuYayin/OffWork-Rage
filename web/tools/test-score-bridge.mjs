@@ -1,0 +1,44 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import vm from 'node:vm';
+import { spawn } from 'node:child_process';
+import { webcrypto } from 'node:crypto';
+import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
+const project = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const data = fs.mkdtempSync(path.join(os.tmpdir(), 'offwork-score-test-'));
+const child = spawn('python', ['-u', '-c', `import server;s=server.make_server('127.0.0.1',0,'web',${JSON.stringify(data)});print('PORT='+str(s.server_port),flush=True);s.serve_forever()`], {cwd:project});
+let port;
+try {
+  port = await new Promise((resolve,reject)=>{
+    let output=''; const timer=setTimeout(()=>reject(new Error('server startup timeout')),10000);
+    child.stdout.on('data',chunk=>{output+=chunk;const m=output.match(/PORT=(\d+)/);if(m){clearTimeout(timer);resolve(Number(m[1]));}});
+    child.once('error',reject);child.stderr.on('data',d=>process.stderr.write(d));
+  });
+  const functions={};const base='http://127.0.0.1:'+port;
+  const context={window:{OFFWORK_API_ENABLED:true,fetch:(url,opts)=>fetch(base+url,opts),crypto:webcrypto,setTimeout,clearTimeout},AbortController,Uint8Array,pushFnGlobal:(name,fn)=>functions[name]=fn};
+  const source=fs.readFileSync(path.join(project,'web/js/engine.js'),'utf8');
+  vm.runInNewContext(source.slice(source.indexOf('    var score = { revision:'),source.indexOf('    // Legacy calls fail immediately;')),context);
+  const wait=async state=>{const deadline=Date.now()+5000;while(functions.ScorePoll()[1]!==state){if(Date.now()>deadline)throw new Error('timeout '+JSON.stringify(functions.ScorePoll()));await new Promise(r=>setTimeout(r,5));}};
+  assert.equal(functions.ScoreRefresh('campaign'),true);
+  assert.equal(functions.ScorePoll()[1],'loading');
+  await wait('idle');assert.equal(functions.ScorePoll()[4],'');
+  const entry={name:'周序 "中文"|;%😀abc123',score:5000+1500+120+40+30,wave:5,boss:1,kills:10,level:1,time:10,mode:'campaign',hero:'programmer',run_id:functions.ScoreNewRunId()};
+  const began=performance.now();assert.equal(functions.ScoreSubmit(JSON.stringify(entry)),true);
+  assert(performance.now()-began<50,'submit must return immediately');
+  assert.equal(functions.ScorePoll()[1],'submitting');
+  assert.equal(functions.ScoreRefresh('endless'),false,'busy request never replaces submit');
+  await wait('success');assert.equal(functions.ScorePoll()[2],1);
+  let list=await(await fetch(base+'/api/leaderboard?mode=campaign')).json();
+  assert.equal(list.entries.length,1);assert.equal(list.entries[0].name,entry.name);
+  assert.equal(list.entries[0].ruleset,'balance-2026-11-07-v2');
+  assert.equal(functions.ScoreSubmit(JSON.stringify(entry)),true);await wait('success');
+  list=await(await fetch(base+'/api/leaderboard?mode=campaign')).json();assert.equal(list.entries.length,1,'retry remains one record');
+  assert.equal(functions.ScoreRefresh('endless'),true);await wait('idle');
+  assert.equal(functions.ScorePoll()[4],'','mode switch does not show campaign scores');
+  const bad={...entry,run_id:functions.ScoreNewRunId(),score:9999};
+  assert.equal(functions.ScoreSubmit(JSON.stringify(bad)),true);await wait('error');
+  assert.equal(functions.ScorePoll()[3],'score_mismatch');
+  console.log(JSON.stringify({ok:true,transport:'real HTTP',storage:'SQLite',nonblocking:true,unicode:true,idempotency:true,modeIsolation:true,errorState:true,testData:data},null,2));
+} finally { child.kill(); }

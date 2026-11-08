@@ -1,0 +1,47 @@
+:root{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px)}
+#officeRoot [data-kind=ScrollView]{touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;min-height:0}
+#officeRoot .pause-scroll{max-height:calc(var(--game-height,100dvh) - 24px - var(--safe-top) - var(--safe-bottom));overflow:auto!important;flex-shrink:1;touch-action:pan-y}
+#officeRoot .pause-scroll>.pause-content{padding:65px 30px 28px!important}
+#officeRoot .result-sheet{max-height:calc(var(--game-height,100dvh) - 24px - var(--safe-top) - var(--safe-bottom))}
+#officeRoot #hudLayer{top:var(--safe-top)!important;left:var(--safe-left)!important;width:calc(100% - var(--safe-left) - var(--safe-right))!important;height:calc(100% - var(--safe-top) - var(--safe-bottom))!important}
+#mobileDisplayButton{display:none;position:fixed;bottom:calc(8px + var(--safe-bottom));left:50%;transform:translateX(-50%);z-index:70;width:84px;min-height:40px;padding:6px 3px;border:1px solid #c99b6b;border-radius:6px;background:#fff1d8ed;color:#493346;font:12px 'Microsoft YaHei',sans-serif;touch-action:manipulation}
+#mobileDisplayHint{position:fixed;z-index:100;left:50%;top:50%;transform:translate(-50%,-50%);width:min(320px,calc(100vw - 32px));box-sizing:border-box;padding:18px;background:#fff4de;border:2px solid #bb8d65;border-radius:8px;color:#493346;font:15px/1.65 'Microsoft YaHei',sans-serif;box-shadow:0 8px 40px #0008}
+#mobileDisplayHint[hidden]{display:none}
+#mobileDisplayHint p{margin:0 0 14px}#mobileDisplayHint button{min-height:44px;width:100%;background:#a4e6d3;border:1px solid #508e78;border-radius:5px;color:#493346;font:16px 'Microsoft YaHei',sans-serif}
+@media(pointer:coarse),(max-width:1000px){#mobileDisplayButton{display:block}}
+.native-keyboard-open #mobileDisplayButton{display:none}
+@media(max-width:639px) and (orientation:portrait){
+ #officeRoot .desk-menu-copy{top:43%!important;bottom:58px!important;justify-content:flex-start!important;overflow-y:auto!important;touch-action:pan-y;padding:3px 4px 12px!important}
+ #officeRoot .desk-title{top:12%!important;gap:0!important}
+ #officeRoot .memo-grid{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important;flex-shrink:0}
+ #officeRoot .memo-button{width:100%!important;height:90px!important;min-height:70px!important}
+ #officeRoot .desk-photo-caption{display:none!important}
+ #officeRoot .settings-paper{max-height:calc(var(--game-height,100dvh) - 80px);overflow-y:auto!important;touch-action:pan-y}
+ #officeRoot .four-hero-selection{max-height:calc(var(--game-height,100dvh) - 78px);margin-bottom:48px;padding:8px!important}
+ #officeRoot .expanded-badge .badge-description{display:none!important}
+ #officeRoot .expanded-badge{height:250px!important;transform:none!important}
+ #officeRoot .folder-picker{max-height:calc(var(--game-height,100dvh) - 78px);margin-bottom:48px}
+ #officeRoot #upgradeIndexScroll{height:clamp(96px,28dvh,250px)!important;max-height:40%;flex-shrink:1!important}
+ #officeRoot .pause-scroll{max-height:calc(var(--game-height,100dvh) - 80px);margin-bottom:48px}
+ #officeRoot .pause-scroll>.pause-content{padding:64px 25px 25px!important}
+ #officeRoot .result-sheet,#officeRoot .leaderboard-sheet{max-height:calc(var(--game-height,100dvh) - 78px);margin-bottom:48px}
+}
+@media(max-height:520px) and (orientation:landscape){
+ #officeRoot .desk-menu-copy{top:5%!important;bottom:48px!important;overflow-y:auto!important;touch-action:pan-y}
+ #officeRoot .memo-button{height:72px!important;min-height:58px!important}
+ #officeRoot .desk-title .menu-title{font-size:30px!important}
+ #officeRoot .desk-footer{display:none!important}
+ #officeRoot .settings-paper{max-height:calc(var(--game-height,100dvh) - 70px);overflow-y:auto!important;touch-action:pan-y}
+ #officeRoot .four-hero-selection,#officeRoot .folder-picker,#officeRoot .result-sheet,#officeRoot .leaderboard-sheet{max-height:calc(var(--game-height,100dvh) - 66px);margin-bottom:42px}
+ #officeRoot .four-hero-selection .selection-heading{font-size:19px!important;padding:0!important}
+ #officeRoot .four-hero-selection{gap:5px!important;padding:5px!important}
+ #officeRoot .expanded-badge{height:210px!important;transform:none!important}
+ #officeRoot .expanded-badge .badge-description{display:none!important}
+ #officeRoot .pause-scroll{max-height:calc(var(--game-height,100dvh) - 66px);margin-bottom:42px}
+ #officeRoot .pause-scroll>.pause-content{padding:52px 28px 22px!important;gap:10px!important}
+ #officeRoot #upgradeDetailIcon{width:44px!important;height:44px!important}
+ #officeRoot .folder-picker{padding:10px!important;gap:6px!important}
+ #officeRoot .folder-picker-heading{font-size:20px!important}
+ #officeRoot .result-header{padding-top:42px!important}
+}
+@media(max-width:369px) and (orientation:portrait){#officeRoot .memo-button{height:76px!important}#officeRoot .memo-title{font-size:16px!important}#officeRoot .desk-controls{font-size:10px!important}#officeRoot .result-actions{padding-left:20px!important;padding-right:20px!important}}

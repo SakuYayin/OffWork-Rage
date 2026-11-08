@@ -1,0 +1,22 @@
+{
+  "mode": "built-in image_gen",
+  "model": "exact identifier not exposed",
+  "prompts": [
+    [
+      "desk",
+      "Production game menu BACKGROUND only, single wide 16:9 full frame detailed crisp pixel art following attached approved office desk composition. Warm honey wooden desk with deep office-night window skyline along TOP 20%, leafy plant upper left, books and sleeping orange cat at bottom left, pen and paper at bottom edge, headphones and stationery lower right. LEFT 45% has large slightly tilted framed cover PHOTO of brown-haired office boy white shirt navy tie and brown ponytail office girl escaping silly office monsters toward elevator, dynamic detailed pixel chibi illustration. RIGHT 55% is clean honey desk surface, uncluttered so real title and four large sticky note buttons can be laid on it in code. No menu labels, no text, no letters, no buttons, NO baked notes in right area, no watermark. High quality solid pixel clusters, rich warm yellow/coral/mint/violet accents, no gradients pretending to be pixels. This is menu illustration only not gameplay map."
+    ],
+    [
+      "badge",
+      "Production UI asset: ONE EMPTY LANDSCAPE EMPLOYEE ID CARD on genuine transparent background, matching attached approved warm playful detailed pixel art. 4:3 canvas. A short teal lanyard enters from top and clips to center metal binder clip at y20%, card body from y25% to90%, large cream ivory laminated badge with gently stepped corners, turquoise and coral edge stripes, subtle paper fibers, fine pixel outlines, bottom barcode as decorative bars only. Most of card face MUST be completely blank ivory with NO photo, no writing, no icons, no preset fields or panels; runtime character photo and Chinese labels will be overlaid. Badge almost fills width with small transparent margins, no shadows outside card, no scene or watermark. Clear readable empty face essential."
+    ],
+    [
+      "paper",
+      "Production UI asset: ONE blank warm ivory sheet of paper, genuine transparent background, landscape 4:3 canvas, fills 90% canvas. Crisp detailed pixel art matching attached, stepped torn paper edge, subtle grain, restrained golden ruled edge, two pieces of mint/peach washi tape at top corners and a small coral pushpin at top center. Large EMPTY light cream center 85% face with no words, no symbols, no icons, no text, no watermark. Used as a flexible UI dialog background with runtime text. No scene."
+    ],
+    [
+      "notes",
+      "Production UI SPRITE ATLAS, genuine transparent background, exact 2 columns x 2 rows equal cells, each cell contains ONE large landscape sticky note. Top left sunshine yellow note with orange thumbtack, top right coral pink note with red thumbtack, bottom left mint turquoise note with green thumbtack, bottom right lavender note with violet thumbtack. Following approved detailed crisp pixel art. Each note front-on horizontal rectangle, slightly irregular stepped paper edges and one folded corner, subtle texture and soft pixel shadow inside its own cell only. Blank wide clean centers for runtime text, NO icons NO letters NO words NO watermarks. Keep all notes same size and aligned, transparent 8% margin around each, strict separations, no overlapping."
+    ]
+  ]
+}

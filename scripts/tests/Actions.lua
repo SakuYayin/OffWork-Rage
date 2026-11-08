@@ -15,7 +15,7 @@ local function Near(a, b) return math.abs(a - b) < 0.00001 end
 ---@param heroId string?
 ---@return table
 local function Fixture(heroId)
-    local g = New(heroId or "female")
+    local g = New(heroId or "male")
     g.mode = "playing"
     g.waveTimer, g.meleeTimer, g.staplerTimer, g.coffeeTimer = 999, 999, 999, 999
     g.player.invuln, g.crit = 999, 0
@@ -161,7 +161,7 @@ function Tests.Run(externalCheck)
 
     for _, heroId in ipairs({ "male", "female" }) do
         Case("keyboard lifecycle " .. heroId, function()
-            local g = Fixture(heroId)
+            local g = Fixture(heroId) if heroId=="female"then g.secondaryWeapon="keyboard"end
             local enemy = Target(g)
             local hp = enemy.hp
             g.meleeTimer = 0
@@ -178,7 +178,7 @@ function Tests.Run(externalCheck)
             local damage = math.floor(27 * g.damage)
             Check(enemy.hp == hp - damage and action.impactDone and action.phase == "impact", "到0.10才按角色倍率命中一次")
             Check(Events(g, action.serial, "start") == 1 and Events(g, action.serial, "impact") == 1, "单serial起手与命中各一次")
-            Check(Sounds(g, "swing") == 1 and g.hitStop > 0, "命中有一次挥击音效及真实hitstop")
+            Check(Sounds(g, "swing") == 1 and g.shake > 0 and g.hitStop == 0, "普攻命中有音效和震屏，保持全局移动连续")
             Tick(g, 11)
             Check(action.phase == "recovery" and g.actionTracks.keyboard == action
                 and enemy.hp == hp - damage, "完整收招期间保持轨道且不重复伤害")
@@ -213,7 +213,7 @@ function Tests.Run(externalCheck)
         Case("stapler single volley level" .. level, function()
             local g = Fixture()
             Target(g, 800, 580)
-            g.stapler, g.staplerTimer = level, 0
+            g.secondaryWeapon="stapler" g.stapler, g.staplerTimer = level, 0
             Tick(g, 1)
             local action = assert(g.actionTracks.stapler)
             Check(action.time == 0 and #g.shots == 0 and Sounds(g, "staple") == 0, "起手蓄力不发弹")
@@ -233,36 +233,57 @@ function Tests.Run(externalCheck)
         end)
     end
 
-    Case("independent overlapping weapons", function()
-        local g = Fixture()
-        Target(g)
-        g.stapler, g.coffee = 1, 1
-        g.meleeTimer, g.staplerTimer, g.coffeeTimer = 0, 0, 0
-        Tick(g, 1)
-        local keyboard, stapler, coffee = assert(g.actionTracks.keyboard), assert(g.actionTracks.stapler), assert(g.actionTracks.coffee)
-        Check(g.action == keyboard and keyboard.serial ~= stapler.serial and coffee.serial ~= stapler.serial, "三武器同帧独立起手，键盘主姿态稳定")
-        Check(keyboard.time == 0 and stapler.time == 0 and coffee.time == 0 and #g.shots == 0 and #g.pools == 0, "所有武器起手均无提前impact")
-        g.meleeTimer, g.staplerTimer, g.coffeeTimer = 999, 999, 999
-        Tick(g, 4)
-        Check(stapler.impactDone and not keyboard.impactDone and not coffee.impactDone
-            and g.action == keyboard and #g.shots > 0, "订书机不等键盘收招就独立发射")
-        Tick(g, 1)
-        Check(keyboard.impactDone and g.action == keyboard, "键盘独立命中且不抢掉其他轨道")
-        Tick(g, 8)
-        Check(coffee.impactDone and #g.pools == 1 and g.pools[1].actionSerial == coffee.serial
-            and g.action == keyboard, "咖啡同样不被稳定主姿态饿死")
-        Tick(g, 22)
-        for _, action in ipairs({ keyboard, stapler, coffee }) do
-            Check(Events(g, action.serial, "start") == 1 and Events(g, action.serial, "impact") == 1
-                and Events(g, action.serial, "end") == 1 and not g.actionTracks[action.name],
-                action.name .. "独立完整结束，各时序事件唯一")
+    -- 林夏霰弹：主武器门禁只对 female 生效，其他角色拾取订书机仍走上面的单发分支。
+    Case("shotgun pellet count and spread", function()
+        local g = Fixture("female")
+        g.player.x, g.player.y = 520, 580
+        Target(g, 580, 580) -- 距玩家 60px，贴脸
+        g.stapler, g.staplerTimer = 1, 0
+        Tick(g, 5) -- 命中线 0.07s ≈ 第 5 帧
+        Check(#g.shots == 4, "level1 shotgun fires four pellets")
+        local angles = {}
+        for _, s in ipairs(g.shots) do angles[#angles + 1] = math.atan(s.vy, s.vx) end
+        table.sort(angles)
+        Check(math.abs((angles[4] - angles[1]) - 3 * 0.17) < 0.01, "pellets fan out at 0.17 rad")
+        for _, s in ipairs(g.shots) do
+            Check(s.damage == 14 and s.foMin == 0.35 and s.knock == 280,
+                "shotgun pellet carries falloff and knock")
         end
     end)
 
+    Case("shotgun falls off with distance", function()
+        local near = Fixture("female")
+        near.player.x, near.player.y = 520, 580
+        local close = Target(near, 580, 580) -- 60px
+        near.stapler, near.staplerTimer = 1, 0
+        Tick(near, 20) -- 60px / 360 ≈ 10 帧 + 5 帧起手，留余量
+
+        local far = Fixture("female")
+        far.player.x, far.player.y = 520, 580
+        local distant = Target(far, 670, 580) -- 150px，仍在 166px 射程内
+        far.stapler, far.staplerTimer = 1, 0
+        Tick(far, 35) -- 150px / 360 ≈ 25 帧 + 5 帧起手
+
+        Check(close.hp < distant.hp, "closer target takes more shotgun damage")
+    end)
+
+    for _,secondary in ipairs({"stapler","coffee"})do
+    Case("independent overlapping weapons "..secondary, function()
+        local g=Fixture("male");Target(g);g.secondaryWeapon=secondary
+        g.stapler,g.coffee=secondary=="stapler"and 1 or 0,secondary=="coffee"and 1 or 0
+        g.meleeTimer,g.staplerTimer,g.coffeeTimer=0,0,0;Tick(g,1)
+        local keyboard,other=assert(g.actionTracks.keyboard),assert(g.actionTracks[secondary])
+        Check(g.action==keyboard and keyboard.serial~=other.serial,"两件武器独立起手，主姿态稳定")
+        Check(keyboard.time==0 and other.time==0 and #g.shots==0 and #g.pools==0,"起手零伤害")
+        g.meleeTimer,g.staplerTimer,g.coffeeTimer=999,999,999;Tick(g,30)
+        for _,a in ipairs({keyboard,other})do Check(Events(g,a.serial,"start")==1 and Events(g,a.serial,"impact")==1 and Events(g,a.serial,"end")==1,"两件武器独立完整结束")end
+        Check(secondary=="stapler"and #g.shots>0 or secondary=="coffee"and #g.pools==1,"副武器产生真实弹道或区域")
+    end)
+    end
     Case("repeated cooldowns do not starve", function()
         local g = Fixture()
         local target = Target(g)
-        g.stapler, g.coffee, g.attackSpeed, g.range = 1, 1, 3, 3
+        g.secondaryWeapon="stapler" g.stapler, g.coffee, g.attackSpeed, g.range = 1, 1, 3, 3
         g.meleeTimer, g.staplerTimer, g.coffeeTimer = 0, 0, 0
         local seen, counts, unique, bounded = {}, {}, true, true
         for _ = 1, 380 do
@@ -284,12 +305,12 @@ function Tests.Run(externalCheck)
         end
         Check((counts.keyboard or 0) >= 10, "高攻速键盘持续工作而非串行等待")
         Check((counts.stapler or 0) >= 7, "多轮重叠中订书机冷却独立")
-        Check((counts.coffee or 0) >= 2, "长冷却咖啡也有第二次真实impact")
+        Check((counts.coffee or 0)==0, "第三件未装备咖啡不会产生impact")
         Check(unique and bounded, "32项滚动历史同serial+kind永不重复")
     end)
 
     Case("burst windup impact recovery", function()
-        local g = Fixture()
+        local g = Fixture("female")
         local target = Target(g)
         local hp = target.hp
         g.rage = 100
@@ -467,7 +488,9 @@ function Tests.Run(externalCheck)
                     Game.LeaveShop(g)
                     Check(g.roomCleared and g.mode == "playing", "商店确认补给结束才开门")
                 elseif room.kind == "event" then
-                    Check(Game.ResolveEvent(g, 2) and g.roomCleared and g.mode == "playing", "事件领奖后才开门")
+                    -- S5 事件池转正后首事件房 pin legacy_1（tests/Menu.lua:162 红线）只有 1 个选项，
+                    -- 后续事件房才有 2 选项；统一选「最后一个存在的选项」验证领奖后才开门。
+                    Check(Game.ResolveEvent(g, math.min(2, math.max(1, #(g.eventChoices or {})))) and g.roomCleared and g.mode == "playing", "事件领奖后才开门")
                 else
                     if room.kind == "boss" then
                         local boss = assert(g.enemies[1], "首领未生成")

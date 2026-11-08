@@ -1,81 +1,31 @@
--- 电脑屏幕只负责呈现；开始、返回和音频状态仍由 main 管理。
-local UI = require("urhox-libs/UI")
-local Skin = require("UISkin")
-local Text = Skin.Text
-local MainMenuUI = {}
-
----@param settingsOpen boolean
----@param onStart fun()
----@param onSettings fun()
----@param onBack fun()
----@param audioControls fun(compact: boolean): Panel
----@return Panel
-function MainMenuUI.Build(settingsOpen, onStart, onSettings, onBack, audioControls)
-    local width, height = UI.GetViewportSize()
-    local narrow = width < 760
-    local screenWidth = math.max(1, math.min(width - 32, 1060))
-    local screenHeight = math.max(360, math.min(height - 124, narrow and 670 or 570))
-    local innerWidth = math.max(1, screenWidth - 88)
-    local buttonWidth = math.min(320, innerWidth - 32)
-    local content = {}
-    if settingsOpen then
-        content = {
-            Text("SYSTEM / 声音设置", 9, "lightMuted", { fontFamily = "mono", textAlign = "center" }),
-            Text("工位设置", narrow and 24 or 30, "cream", {
-                id = "menuSettingsTitle", textAlign = "center", fontWeight = "bold" }),
-            Text("音乐与音效可以独立开关", 10.5, "lightMuted", { textAlign = "center", whiteSpace = "normal" }),
-            UI.Panel { width = math.min(430, innerWidth - 24), children = { audioControls(false) } },
-            Skin.Button { id = "menuSettingsBack", text = "返回主菜单", width = buttonWidth,
-                height = 48, variant = "secondary", onClick = onBack },
-        }
-    else
-        content = {
-            UI.Panel { id = "menuTimeBar", width = "88%", alignItems = "center", gap = 3,
-                paddingVertical = 8, backgroundColor = { 16, 49, 57, 230 }, children = {
-                    Text("距 离 下 班", 8.25, "lightMuted", { textAlign = "center" }),
-                    Text("17:59", narrow and 27 or 33, "cream", {
-                        id = "menuClock", fontFamily = "mono", textAlign = "center" }),
-                } },
-            Text("下班！别拦我", narrow and 24 or 36, "cream", {
-                id = "menuTitle", width = "100%", fontWeight = "bold", textAlign = "center",
-                whiteSpace = "normal", lineHeight = 1.25 }),
-            Skin.Button { id = "menuStart", text = "开始游戏", width = buttonWidth,
-                height = 52, fontSize = 13.5, onClick = onStart },
-            Skin.Button { id = "menuSettings", text = "设置", width = buttonWidth,
-                height = 48, fontSize = 12, variant = "secondary", onClick = onSettings },
-        }
-    end
-    print(string.format("[电脑菜单] 屏幕 %.0fx%.0f，设置=%s，无主菜单人物立绘",
-        screenWidth, screenHeight, tostring(settingsOpen)))
-    return UI.Panel { id = "mainMenu", width = "100%", height = "100%", children = {
-        Skin.Background { position = "absolute", top = 0, left = 0, right = 0, bottom = 0 },
-        UI.Panel { position = "absolute", top = 0, left = 0, right = 0, bottom = 0,
-            backgroundColor = { 8, 18, 27, 155 }, pointerEvents = "none" },
-        UI.SafeAreaView { width = "100%", height = "100%", nativeMenuInset = true, children = {
-            UI.ScrollView { id = "menuScroll", width = "100%", flexGrow = 1, flexBasis = 0, minHeight = 0,
-                scrollX = false, scrollY = true, showScrollbar = false, bounces = false, children = {
-                    UI.Panel { width = "100%", minHeight = math.max(1, height - 32),
-                        paddingVertical = 12, alignItems = "center", justifyContent = "center", children = {
-                            UI.Panel { id = "menuComputer", width = screenWidth, height = screenHeight,
-                                flexShrink = 0, backgroundImage = Skin.assets.computer,
-                                backgroundFit = "sliced", backgroundSlice = { 37, 39, 44, 39 },
-                                paddingTop = 42, paddingBottom = 52, paddingHorizontal = 44, children = {
-                                    UI.ScrollView { id = "computerScreen", width = "100%", flexGrow = 1,
-                                        flexBasis = 0, minHeight = 0, scrollX = false, scrollY = true,
-                                        showScrollbar = false, bounces = false, children = {
-                                            UI.Panel { id = "menuCopy", width = "100%",
-                                                minHeight = math.max(310, screenHeight - 94), padding = 16,
-                                                gap = narrow and 16 or 20, alignItems = "center",
-                                                justifyContent = "center", children = content },
-                                        } },
-                                } },
-                            UI.Panel { width = screenWidth * 0.58, height = math.min(110, screenWidth * 0.16),
-                                marginTop = -2, backgroundImage = Skin.assets.computerStand,
-                                backgroundFit = "contain", pointerEvents = "none" },
-                        } },
-                } },
-        } },
-    } }
+local UI=require("urhox-libs/UI")
+local Skin=require("UISkin")
+local Scale=require("InterfaceScale")
+local Menu={}
+function Menu.Build(settingsOpen,onStart,onSettings,onBack,audioControls,onEndless,onLeaderboard)
+ local p=Scale.Get();local S=p.px
+ if settingsOpen then return Skin.Card{id="mainMenu",className="game-card settings-paper",width=math.min(p.w-28,S(470)),padding=S(32),gap=S(20),children={
+  Skin.Text("工位声音管理",13,"teal"),Skin.Text("耳朵也要下班",28,"ink"),Skin.Text("音乐和音效，各管各的。",14,"muted"),audioControls(false),
+  Skin.Button{id="menuSettingsBack",text="收好设置，回桌面",width="100%",tone="coral",onClick=onBack}}}end
+ local function Note(id,title,detail,icon,tone,fn)
+  return Skin.Button{id=id,className="game-button memo-button memo-"..tone,tone=tone,width="48%",height=p.portrait and 108 or S(p.landscape and 98 or 143),
+   padding=S(22),gap=S(8),flexDirection="row",alignItems="center",onClick=fn,children={
+    Skin.Icon("item",icon,S(p.landscape and 38 or 48),S(p.landscape and 38 or 52)),
+    UI.Panel{flexGrow=1,flexBasis=0,minWidth=0,gap=5,pointerEvents="none",children={
+     Skin.Text(title,p.portrait and 19 or 25,"ink",{className="memo-title"}),Skin.Text(detail,12,"ink",{className="memo-detail"})}}}}
+ end
+ return UI.Panel{id="mainMenu",className="main-menu desk-menu",width="100%",height="100%",backgroundImage="image/ui/desk.png",backgroundFit="cover",children={
+  UI.Panel{className="desk-photo-caption",children={Skin.Text("今日目标",14,"ink"),Skin.Text("不加班，准点走！",24,"ink")}},
+  UI.Panel{id="menuCopy",className="desk-menu-copy",gap=S(18),children={
+   Skin.Text("已完成今天的工作 · 剩下的明天再说",12,"ink",{className="desk-eyebrow"}),
+   UI.Panel{className="desk-title",children={Skin.Text("下班！",58,"yellow",{id="menuTitle",className="menu-title gold-title"}),
+    Skin.Text("别挡我！",58,"purple",{className="menu-title violet-title"})}},
+   UI.Panel{className="memo-grid",width="100%",flexDirection="row",flexWrap="wrap",gap=S(12),children={
+    Note("menuStart","打卡下班","闯过办公室  ↗","badge","yellow",onStart),
+    Note("menuEndless","加班无尽","看看能撑多久  ∞","coffee","coral",onEndless),
+    Note("menuLeaderboard","排行榜","翻翻下班成绩单","coin","mint",onLeaderboard),
+    Note("menuSettings","声音设置","让耳朵歇一会儿","headphones","lilac",onSettings)}},
+   Skin.Text(p.portrait and "轻推走 · 拖远跑 · 自动攻击"or"WASD 移动 · 自动攻击 · 空格释放大招",12,"ink",{className="desk-controls"})}},
+  Skin.Text("17:59  /  今天的时间，留给自己。",12,"ink",{className="desk-footer"})}}
 end
-
-return MainMenuUI
+return Menu

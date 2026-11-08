@@ -5,6 +5,7 @@ local Game = require("Game")
 local Heroes = require("Heroes")
 local Campaign = require("Campaign")
 local Navigation = require("Navigation")
+local Difficulty=require("Difficulty")
 local Tests = {}
 local New = Game.New
 
@@ -74,7 +75,8 @@ function Tests.Run(externalCheck)
         passed = passed + 1
     end
 
-    Check(#Heroes.list == 2 and Heroes.list[1].id ~= Heroes.list[2].id, "两位独立可选角色")
+    local ids={};for _,h in ipairs(Heroes.list)do Check(not ids[h.id],"独立可选角色ID不重复");ids[h.id]=true end
+    Check(#Heroes.list==5 and ids.male and ids.female and ids.intern and ids.programmer and ids.fufu,"五位独立可选角色")
     Check(Heroes.Get().id == "male" and Heroes.Get("not-a-hero").id == "male", "角色查询默认与非法ID回退男主")
     for _, id in ipairs({ false, "not-a-hero" }) do
         local g = New(id or nil)
@@ -110,20 +112,27 @@ function Tests.Run(externalCheck)
 
         local melee = Fixture(1, spec.id)
         local close = Stationary(melee, 570, 580)
+        close.hp,close.maxHp=100000,100000
         local closeHp = close.hp
-        melee.meleeTimer = 0
-        Tick(melee, 1)
-        Check(close.hp == closeHp and melee.action.name == "keyboard" and melee.action.time == 0,
-            label .. "真实键盘起手仅蓄力不提前伤害")
-        Tick(melee, 1)
-        Check(close.hp == closeHp and not melee.actionTracks.keyboard.impactDone, label .. "键盘命中前伤害为零")
-        Tick(melee, 1)
-        Check(closeHp - close.hp == math.floor(27 * spec.damage) and melee.actionTracks.keyboard.impactDone,
-            label .. "真实键盘命中时刻应用角色伤害倍率")
-        melee.meleeTimer = 999 -- 只隔离下一轮自动起手，不跳过当前收招或hitstop。
-        Tick(melee, 10)
-        Check(closeHp - close.hp == math.floor(27 * spec.damage) and not melee.actionTracks.keyboard,
-            label .. "键盘收招结束不重复命中")
+        local primary=Heroes.Get(spec.id).primaryWeapon
+        melee.meleeTimer,melee.staplerTimer=0,0
+        Tick(melee,1)
+        local attack=assert(melee.actionTracks[primary])
+        Check(close.hp==closeHp and attack.time==0,label.."初始专属武器起手仅蓄力")
+        melee.meleeTimer,melee.staplerTimer=999,999
+        Check(not attack.impactDone,label.."初始武器命中前无伤害")
+        Tick(melee,12)
+        -- 林夏的订书机已改成霰弹（docs/design/17-female-shotgun.md）：4 颗弹丸 × 单颗 14，
+        -- 50px 处命中点在 40px 满伤区内，逐颗 floor 后合计 4 × floor(14 × damage)。
+        local expected
+        if primary=="stapler" then
+            expected=4*math.floor(14*spec.damage)
+        else
+            expected=math.floor((primary=="keyboard"and 27 or 25)*spec.damage)
+        end
+        Check(closeHp-close.hp==expected,label.."初始专属武器命中应用角色倍率")
+        Tick(melee,10)
+        Check(closeHp-close.hp==expected and not melee.actionTracks[primary],label.."初始专属武器收招不重复命中")
 
         local ranged = Fixture(1, spec.id)
         local distant = Stationary(ranged, 560, 580)
@@ -151,16 +160,17 @@ function Tests.Run(externalCheck)
             Game.Choose(g, 1)
             local hpBefore, maxBefore, speedBefore, damageBefore, coinsBefore =
                 g.player.hp, g.player.maxHp, g.player.speed, g.damage, g.coins
+            local recovery=30*Difficulty.HealMul(Difficulty.Wave({floor=floor+1,roomsCleared=g.roomsCleared,wave=g.wave}))
             Check(Game.OpenRoute(g) and g.floor == floor + 1 and g.roomIndex == 1, label .. "F" .. floor .. "电梯跨层")
             Check(g.heroId == spec.id and g.hero == hero and g.player.maxHp == maxBefore
-                and g.player.hp == math.min(maxBefore, hpBefore + 30) and Near(g.player.speed, speedBefore)
+                and Near(g.player.hp,math.min(maxBefore, hpBefore + recovery)) and Near(g.player.speed, speedBefore)
                 and Near(g.damage, damageBefore) and g.coins == coinsBefore, label .. "F" .. floor .. "跨层保留角色与强化")
         end
         local replay = New(g.heroId)
         Game.Start(replay)
         Check(replay.heroId == spec.id and replay.player.hp == spec.hp and replay.player.maxHp == spec.hp
             and replay.player.speed == spec.speed and Near(replay.damage, spec.damage) and replay.floor == 1
-            and replay.coins == 0 and replay.level == 1 and replay.stapler == 0, label .. "原角色新局重置构筑而非换角色")
+            and replay.coins == 0 and replay.level == 1 and replay.stapler == (spec.id=="female"and 1 or 0), label .. "原角色新局重置构筑而非换角色")
         Check(hero.maxHp == spec.hp and hero.speed == spec.speed and Near(hero.damage, spec.damage), label .. "强化不污染共享角色配置")
     end
 
@@ -289,7 +299,7 @@ function Tests.Run(externalCheck)
     Check(moved.player.y <= 382.00001 and not Solid(Game.GetDesks(moved), moved.player.x, moved.player.y, 12),
         "高速纵向移动不能穿过横隔断")
 
-    local wall = Fixture(1)
+    local wall = Fixture(1,"male")
     wall.player.x, wall.player.y, wall.meleeTimer = 310, 280, 0
     local shielded = Stationary(wall, 380, 280)
     local shieldHp = shielded.hp
@@ -317,18 +327,18 @@ function Tests.Run(externalCheck)
     Tick(wall, 1)
     Check(wall.player.hp == playerHp and #wall.hostileShots == 0, "高速敌方弹丸不能隔墙命中玩家")
 
-    local control = Fixture(1)
+    local control = Fixture(1,"male")
     control.player.x, control.player.y, control.meleeTimer = 310, 280, 0
     local visible = Stationary(control, 290, 280)
     local visibleHp = visible.hp
     Tick(control, 1)
     Check(visible.hp == visibleHp and control.action.name == "keyboard", "同侧键盘对照起手只蓄力")
     Tick(control, 2)
-    Check(visibleHp - visible.hp == math.floor(27 * 1.30) and control.actionTracks.keyboard.impactDone,
+    Check(visibleHp - visible.hp == math.floor(27 * .85) and control.actionTracks.keyboard.impactDone,
         "同侧近战对照确实推进到命中而非空跑")
     control.meleeTimer = 999
     Tick(control, 10)
-    Check(visibleHp - visible.hp == math.floor(27 * 1.30) and not control.actionTracks.keyboard,
+    Check(visibleHp - visible.hp == math.floor(27 * .85) and not control.actionTracks.keyboard,
         "同侧近战收招不重复伤害")
     local shotControl = Fixture(1)
     local openTarget = Stationary(shotControl, 560, 580)

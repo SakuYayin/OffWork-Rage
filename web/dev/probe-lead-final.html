@@ -1,0 +1,64 @@
+<!doctype html><meta charset="utf-8"><body style="margin:0">
+<iframe id="f" src="/?boot=off" style="width:1280px;height:800px;border:0"></iframe>
+<script>
+var out=[];
+var log=function(m){ out.push(m); console.log('[LP] '+m); };
+function W(){ return document.getElementById('f').contentWindow; }
+function lua(code){ var r=W().DSH.Engine._fengari.doString(code); return r&&r.ok?r.value:('ERR:'+String(r&&r.error).slice(0,200)); }
+function step(ms){ return new Promise(function(res){setTimeout(res,ms);}); }
+var f=document.getElementById('f');
+f.onload=function(){ setTimeout(async function(){
+ try{
+  lua(["local ok,err=pcall(function()",
+   "local G=require('Game') local orig=G.New",
+   "G.New=function(h) local gg=orig(h) _G.__LIVE=gg return gg end",
+   "require('main') Start() end)",
+   "if not ok then error(err) end"].join("\n"));
+  W().DSH.Engine.startLoop();
+  await step(700);
+  // --- shop ---
+  lua("local G=require('Game') _G.__LIVE.coins=300 G.EnterRoom(_G.__LIVE,4)");
+  await step(500);
+  log('shop mode='+lua("return _G.__LIVE.mode")+' items='+lua("return #_G.__LIVE.shopItems"));
+  var d=W().document;
+  log('campaignShop='+!!d.getElementById('campaignShop')+' rows='+d.querySelectorAll('.folder-index-row').length
+    +' ids='+['shopBuy1','shopBuy2','shopBuy3','shopBuy4','shopBuy5','shopBuyConfirm','shopReroll','shopLeave','shopBalance'].map(function(i){return i+':'+!!d.getElementById(i)}).join(','));
+  log('row1title='+lua("return _G.__LIVE.shopItems[1].id")+' rowIds='+lua("local t={} for i,it in ipairs(_G.__LIVE.shopItems) do t[#t+1]=it.id end return table.concat(t,',')"));
+  var t0=d.getElementById('shopDetailTitle').textContent;
+  d.getElementById('shopBuy3').click(); await step(400);
+  var t1=d.getElementById('shopDetailTitle')?d.getElementById('shopDetailTitle').textContent:'(gone)';
+  log('select3 idx='+lua("return _G.__LIVE.shopSelectedIndex")+' title '+t0+' -> '+t1);
+  var coins0=lua("return _G.__LIVE.coins");
+  d.getElementById('shopBuyConfirm').click(); await step(400);
+  log('buy coins '+coins0+' -> '+lua("return _G.__LIVE.coins")+' sold3='+lua("return tostring(_G.__LIVE.shopItems[3].sold)")+' buffs='+lua("local n=0 for k,v in pairs(_G.__LIVE.buffs) do n=n+1 end return n"));
+  var r0=lua("return _G.__LIVE.shopRerollsLeft");
+  d.getElementById('shopReroll').click(); await step(400);
+  log('reroll '+r0+' -> '+lua("return _G.__LIVE.shopRerollsLeft")+' first='+lua("return _G.__LIVE.shopItems[1].id")+' n='+lua("return #_G.__LIVE.shopItems"));
+  lua("_G.__LIVE.shopRerollsLeft=0 _G.__LIVE.uiRevision=_G.__LIVE.uiRevision+1"); await step(400);
+  var btn=W().document.getElementById('shopReroll');
+  log('reroll0 text='+(btn?btn.textContent:'?')+' disabled='+(btn?btn.disabled:'?'));
+  d=W().document; d.getElementById('shopLeave').click(); await step(500);
+  log('leave mode='+lua("return _G.__LIVE.mode")+' cleared='+lua("return tostring(_G.__LIVE.roomCleared)"));
+  // --- upgrade reroll ---
+  lua("local G=require('Game') _G.__LIVE.mode='upgrade' _G.__LIVE.choices=G.RollChoices(_G.__LIVE) _G.__LIVE.rerollsLeft=3 _G.__LIVE.upgradeSelectedIndex=1 _G.__LIVE.uiRevision=_G.__LIVE.uiRevision+1");
+  await step(500);
+  var u=W().document.getElementById('upgradeReroll');
+  var c0=lua("return _G.__LIVE.choices[1].title");
+  log('upgradeReroll='+(u?u.textContent+' disabled='+u.disabled:'MISSING'));
+  if(u){ u.click(); await step(400); }
+  log('upgrade reroll left='+lua("return _G.__LIVE.rerollsLeft")+' c0 '+c0+' -> '+lua("return _G.__LIVE.choices[1].title"));
+  // --- dash travel ---
+  lua("local B=require('Buffs') _G.__LIVE.mode='playing' B.Apply(_G.__LIVE,'dash') _G.__LIVE.player.x=520 _G.__LIVE.player.y=340");
+  await step(300);
+  var x0=lua("return math.floor(_G.__LIVE.player.x)");
+  var dr=lua("local G=require('Game') return tostring(G.Dash(_G.__LIVE,1,0))");
+  await step(60);
+  var x1=lua("return math.floor(_G.__LIVE.player.x)");
+  await step(400);
+  var x2=lua("return math.floor(_G.__LIVE.player.x)");
+  log('dash='+dr+' x '+x0+' -> '+x1+' (60ms) -> '+x2+' (460ms) cooldown='+lua("return string.format('%.2f',require('Buffs').DashState(_G.__LIVE).cooldown)"));
+  log('DONE');
+ }catch(e){ log('THREW '+(e&&e.message)); }
+ window.__OUT=out;
+},9000); };
+</script>

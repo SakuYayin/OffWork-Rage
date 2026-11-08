@@ -1,0 +1,128 @@
+/* Functional folder picker: local combat UI stays restrained. */
+#officeRoot .folder-picker{background:#f5ecd8;border:3px solid #a89470;border-radius:5px;box-shadow:0 10px 30px #0006;position:relative}
+#officeRoot .folder-picker::before{content:"";position:absolute;top:-12px;left:22px;width:110px;height:12px;background:#f5ecd8;border:3px solid #a89470;border-bottom:0;border-radius:5px 5px 0 0}
+#officeRoot .folder-picker .urhox-label{color:#392d30!important;text-shadow:none}
+#officeRoot .folder-picker .text-muted{color:#776d60!important}
+#officeRoot .folder-index-row{background:#fff9eb!important;border:1px solid #d2c4a6!important;border-radius:3px;box-shadow:none!important;text-align:left;cursor:pointer}
+#officeRoot .folder-index-row.selected{background:#e0f1e6!important;border:2px solid #278b73!important}
+#officeRoot .folder-index-row:hover{background:#ebf4e8!important}
+#officeRoot .folder-index-row:focus-visible{outline:2px solid #278b73;outline-offset:1px}
+#officeRoot .folder-row-title{white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis}
+#officeRoot .folder-row-effect{overflow:hidden;text-overflow:ellipsis;font-size:12px!important;display:block}
+#officeRoot .folder-detail-scroll{border-left:1px solid #c8b896}
+#officeRoot #upgradeConfirm{flex-shrink:0;min-height:44px}
+/* minmax(0,1fr) instead of 1fr: a bare 1fr keeps a min-content floor, which made
+   the two badge columns 396px wide on a 390px phone and clipped the last hero. */
+#officeRoot .hero-badge-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px!important}
+#officeRoot .hero-badge-grid>.employee-badge{width:100%!important;min-width:0}
+#officeRoot .expanded-badge .badge-face{top:29%;bottom:11%}
+/* Five badges never fit in two columns: on a wide window three columns show the
+   whole roster without scrolling, so the fifth hero stays discoverable on PC. */
+@media(min-width:900px){
+ #officeRoot .hero-badge-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ /* Height stays as the Lua-computed inline value: it is already sized for two
+    rows inside the scroller, and forcing a fixed pixel height made wide windows
+    squeeze the badge art while the text spilled past the card. */
+}
+#officeRoot .badge-scroll-hint{opacity:.92;letter-spacing:1px}
+/* The -3deg badge rotation paints ~7px past the layout box on each side, which
+   gave the roster a stray horizontal scrollbar. Keep the scroller vertical-only
+   and park that paint overflow in horizontal padding instead of clipping it. */
+#officeRoot #heroBadgeScroll{overflow-x:hidden!important;padding-left:8px;padding-right:8px}
+#officeRoot .expanded-badge .badge-photo{background:#d8ece1}
+#officeRoot .expanded-badge.intern .badge-photo{background:#dfefd4}
+#officeRoot .expanded-badge.programmer .badge-photo{background:#cde1f5}
+#officeRoot .shield-meter{background:#fff8e5;border:1px solid #499b91;padding:4px 7px;gap:4px;border-radius:3px}
+#officeRoot .shield-meter .urhox-label{color:#196f67!important;white-space:nowrap!important}
+@media(max-width:639px) and (orientation:portrait){
+ #officeRoot .folder-picker{gap:8px!important;padding:12px!important}
+ #officeRoot .folder-picker-body{gap:8px!important}
+ #officeRoot .folder-detail-scroll{border-left:0;border-top:1px solid #c8b896}
+ #officeRoot .folder-keyboard-help{display:none!important}
+ #officeRoot .folder-picker-heading{font-size:23px!important}
+ #officeRoot .hero-badge-grid{gap:5px!important}
+ #officeRoot .expanded-badge .badge-stats .urhox-label{font-size:10px!important}
+ #officeRoot .expanded-badge .badge-stats .urhox-label:first-child{font-size:18px!important}
+ #officeRoot .expanded-badge .badge-company{font-size:9px!important}
+ #officeRoot .four-hero-selection .selection-heading{font-size:21px!important;padding:4px!important}
+}
+@media(max-height:520px) and (orientation:landscape){
+ #officeRoot .folder-picker{padding:14px!important;gap:7px!important}
+ #officeRoot .folder-picker-heading{font-size:24px!important}
+ #officeRoot .folder-index-row{height:45px!important;padding:4px!important}
+ #officeRoot .folder-index-row .folder-row-title{font-size:14px!important}
+ #officeRoot .folder-row-effect{font-size:11px!important}
+ #officeRoot #upgradeDetailIcon{width:55px!important;height:55px!important}
+ #officeRoot #upgradeDetailTitle{font-size:22px!important}
+ #officeRoot .four-hero-selection .selection-heading{font-size:22px!important}
+}
+/* Native name entry and bounded paper score sheet. */
+#officeRoot .result-sheet{display:flex;flex-direction:column;overflow:hidden;background-color:transparent!important;box-shadow:none!important}
+#officeRoot .result-header{flex-shrink:0}
+#officeRoot .result-sheet>[data-kind=ScrollView]>.result-content{padding:18px 80px!important}
+#officeRoot .result-stat{padding:5px 0;border-bottom:1px solid #ddcbb0}
+#officeRoot .result-score{background:#fff0b7;border:1px solid #dbbb6c;border-radius:6px}
+#officeRoot .result-name-form{min-width:0}
+#officeRoot .score-name-input{font-family:'Microsoft YaHei','Noto Sans CJK SC',sans-serif!important;font-size:18px;color:#422a3d;background:#fffdf4;border:2px solid #9e7a60;border-radius:6px;padding:10px 12px;outline:none;min-width:0;width:100%;box-sizing:border-box;touch-action:auto}
+#officeRoot .score-name-input:focus{border-color:#258c7b;box-shadow:0 0 0 3px #8ed3c355}
+#officeRoot .result-message,#officeRoot .result-player-name{overflow-wrap:anywhere;word-break:break-word;max-width:100%}
+#officeRoot .result-actions{flex-shrink:0;background:transparent!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px!important;border-top:0;padding:10px 70px 38px!important}
+#officeRoot #scoreSubmit{background-color:transparent!important;background-image:url('../assets/image/ui/notes.png')!important;background-size:200% 200%!important;background-position:0 100%!important;border:0!important;box-shadow:none!important;clip-path:none;min-height:54px}
+#officeRoot .result-actions button,#officeRoot .leaderboard-actions button{background-color:transparent!important;background-image:url('../assets/image/ui/notes.png')!important;background-size:200% 200%!important;background-repeat:no-repeat;border:0!important;box-shadow:none!important;border-radius:0!important;min-height:48px;white-space:normal;font-size:16px!important}
+#officeRoot .result-actions button:nth-child(1){background-position:100% 100%!important}
+#officeRoot .result-actions button:nth-child(2){background-position:0 0!important}
+#officeRoot .result-actions button:nth-child(3){background-position:100% 0!important}
+#officeRoot .leaderboard-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));flex-shrink:0}
+#officeRoot .leaderboard-actions button:nth-child(1){background-position:0 0!important}
+#officeRoot .leaderboard-actions button:nth-child(2){background-position:0 100%!important}
+#officeRoot .leaderboard-actions button:nth-child(3){background-position:100% 0!important}
+@media(max-width:639px) and (orientation:portrait){
+ #officeRoot .result-header{padding-left:24px!important;padding-right:24px!important;padding-bottom:8px!important}
+ #officeRoot .result-sheet>[data-kind=ScrollView]>.result-content{padding:14px 26px!important;gap:18px!important}
+ #officeRoot .result-actions,#officeRoot .leaderboard-actions{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px 18px 16px!important}
+ #officeRoot .result-actions button:last-child,#officeRoot .leaderboard-actions button:last-child{grid-column:1/-1}
+ #officeRoot .result-actions button{font-size:15px!important}
+}
+@media(max-height:520px) and (orientation:landscape){#officeRoot .result-header{padding-bottom:6px!important}#officeRoot .result-header #resultTitle{font-size:24px!important}#officeRoot .result-actions{padding:8px 22px!important}}
+#officeRoot .leaderboard-cell{font-family:'Microsoft YaHei','Noto Sans CJK SC',sans-serif!important;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#officeRoot .result-player-name{font-family:'Microsoft YaHei','Noto Sans CJK SC',sans-serif!important}
+#officeRoot .expanded-badge.fufu .badge-photo{background:#f5dfe8}
+#officeRoot .fufu-companions{background:#fff0d8e8;border:1px solid #b49379;border-radius:5px}
+#officeRoot .fufu-pet-slot{background:#fff9e8bb;border:1px solid #d9c6a4;border-radius:3px}
+#officeRoot #fufuChargeMeter{padding:4px 5px;background:#fff4dce8;border-radius:4px;border:1px solid #b49379}
+
+/* 事件页（CampaignUI.Event）专属排版修正。
+   真因：卡片背景 paper.png 用 background-size:100% 100% 拉伸（game.css:7），
+   它自带的橙棕画框线内缩是【按卡片宽度的百分比】——实测 1448x1086 原图里
+   左框线 x=83（5.73%）、右框线 x=1357（6.29%）；而 game.css:119 给内容区的是
+   【固定】padding 38px。卡片一宽，文字左边缘就跑到左框线外面、右边缘跑出右框线，
+   视觉上就是文字被纸面裁掉（1567x747 实测左越框 22.6px、右越框 11.7px）。
+   用 #officeRoot #campaignEvent 提高特异性，只影响事件页；Shop / Route 不受影响。 */
+#officeRoot #campaignEvent{container-type:size}
+#officeRoot #campaignEvent>[data-kind=ScrollView]>[data-kind=Panel]{
+ padding-left:max(38px,6.4%)!important;
+ padding-right:max(38px,7%)!important;
+ padding-top:13.6cqh!important;
+ padding-bottom:11cqh!important
+}
+@media(max-width:639px) and (orientation:portrait){
+ #officeRoot #campaignEvent>[data-kind=ScrollView]>[data-kind=Panel]{
+  padding-left:max(24px,6.4%)!important;
+  padding-right:max(24px,7%)!important
+ }
+}
+/* 超长无空格拉丁 token 不可断行，会把选项卡撑宽并产生横向滚动条：
+   实测 390x844 下 #campaignEventScroll sw=450 / cw=358（溢出 92px）。 */
+#officeRoot #campaignEvent .urhox-label{overflow-wrap:anywhere;word-break:break-word}
+#officeRoot #campaignEvent .game-button{overflow-wrap:anywhere;word-break:break-word;min-width:0;max-width:100%}
+
+/* 商店页（CampaignUI.Shop）folder-picker 双栏的收口规则。
+   全部 #campaignShop / #shop* 前缀，不影响 #campaignEvent（:94-117）与增益页。 */
+#officeRoot #campaignShop .folder-index-row{min-height:44px}
+#officeRoot #shopDetailTitle,#officeRoot #shopDetailEffect{overflow-wrap:anywhere;word-break:break-word;max-width:100%}
+#officeRoot #shopReroll,#officeRoot #shopLeave{flex-shrink:0}
+@media(max-height:520px) and (orientation:landscape){
+ /* 图标尺寸由 CampaignUI.lua 按 p.landscape 传入（Skin.Sprite 的内层盒子是
+    按传入宽高算死的，CSS 只缩外层会把内层留在旧尺寸并撑出横向溢出）。 */
+ #officeRoot #shopDetailTitle{font-size:22px!important}
+}

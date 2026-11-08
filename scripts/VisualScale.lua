@@ -1,5 +1,5 @@
 -- 仅定义视觉尺度；沿用 Game/Campaign 的 1040×680 平面坐标，不参与碰撞/导航。
--- 原立绘是唯一身体比例标准：不把独立生成的 battle 图当成同一身材。
+-- 菜单立绘保留原比例；战斗主角使用独立的Q版小人图集。
 ---@class OfficeVisualSize
 ---@field width number
 ---@field height number
@@ -33,8 +33,10 @@ VisualScale.adultHeight = 122
 VisualScale.portraits = { male = { width = 244, height = 672 }, female = { width = 371, height = 672 } }
 ---@type table<string, number>
 VisualScale.actorRatios = {
-    male = 1, female = 1, ghost = 0.82, paper = 0.72, message = 0.54, pot = 0.88,
-    coworker = 1.04, supervisor = 1.08, owner = 1.12,
+    male = 0.72, female = 0.72, intern=.72,programmer=.72,
+    charger=.88,spitter=.72,bomber=.65,shieldGuard=.88,summoner=.86,printerBoss=1.12,
+    ghost = 0.82, paper = 0.72, message = 0.54, pot = 0.88,
+    coworker = 0.88, supervisor = 0.90, owner = 0.94,
 }
 ---@type table<string, OfficeFurnitureScale>
 VisualScale.furniture = {
@@ -46,7 +48,7 @@ VisualScale.furniture = {
 }
 -- 原有160高门框约1.31个成年人；上限不允许门图凭屏幕高度变成巨门。
 VisualScale.door = { maxHeightRatio = 1.32 }
-VisualScale.camera = { minWidthInAdults = 5.25, minHeightInAdults = 3.5, maxZoom = 1, lookAboveRatio = 0.55 }
+VisualScale.camera = { minWidthInAdults = 320 / 122, minHeightInAdults = 340 / 122, maxZoom = 4, lookAboveRatio = 0.55 }
 
 ---@param name string
 ---@return number
@@ -110,9 +112,8 @@ local function Center(target, view, extent)
     return math.max(view / 2, math.min(extent - view / 2, target))
 end
 
--- 模式B的逻辑像素镜头：长屏只增加可见范围，绝不用max/COVER把世界撑满。
--- 极窄/极矮面板等比缩小，至少保留5.25人宽、3.5人高的战术视野。
--- 地图小于视野时居中留边，不以拉伸或放大消除留边。
+-- Scale the same night room uniformly to a readable screen density. A bounded
+-- tactical view prevents an ultrawide/portrait screen from over-magnifying it.
 ---@param width number 逻辑像素
 ---@param height number 逻辑像素
 ---@param targetX number 玩家脚点
@@ -126,9 +127,11 @@ function VisualScale.Camera(width, height, targetX, targetY, worldWidth, worldHe
         or not VisualScale.IsPositiveSize(worldWidth) or not VisualScale.IsPositiveSize(worldHeight)
         or not VisualScale.IsFinite(targetX) or not VisualScale.IsFinite(targetY) then return nil end
     local policy = VisualScale.camera
-    local minWidth = overview and worldWidth or VisualScale.adultHeight * policy.minWidthInAdults
-    local minHeight = overview and worldHeight or VisualScale.adultHeight * policy.minHeightInAdults
-    local zoom = math.min(policy.maxZoom, width / minWidth, height / minHeight)
+    local minWidth = VisualScale.adultHeight * policy.minWidthInAdults
+    local minHeight = VisualScale.adultHeight * policy.minHeightInAdults
+    local fit = math.max(width / worldWidth, height / worldHeight)
+    local zoom = overview and math.min(policy.maxZoom,fit)
+        or math.min(policy.maxZoom,fit,width/minWidth,height/minHeight)
     if not VisualScale.IsPositiveSize(zoom) then return nil end
     local viewW, viewH = width / zoom, height / zoom
     if not VisualScale.IsPositiveSize(viewW) or not VisualScale.IsPositiveSize(viewH) then return nil end
@@ -137,4 +140,5 @@ function VisualScale.Camera(width, height, targetX, targetY, worldWidth, worldHe
     return { zoom = zoom, viewW = viewW, viewH = viewH, x = x, y = y }
 end
 
+VisualScale.actorRatios.fufu=VisualScale.actorRatios.female or 1
 return VisualScale

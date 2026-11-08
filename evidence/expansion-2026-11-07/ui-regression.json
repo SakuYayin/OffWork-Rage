@@ -1,0 +1,10 @@
+{
+  "errors": [],
+  "cases": [
+    "4 hero badges",
+    "index does not award",
+    "confirm awards once",
+    "desktop and 3 small viewport confirmations",
+    "number key selects; Enter awards"
+  ]
+}

@@ -1,147 +1,108 @@
--- Office stationery skin. PixelForge typography / sharp edges; generated art owns the frame detail.
--- All text and actions remain real UI widgets. Resource roots omit the assets/ prefix.
 local UI = require("urhox-libs/UI")
+local Scale = require("InterfaceScale")
+local Icons = require("InterfaceIcons")
+local HeroSprites = require("HeroSprites")
 local Skin = {}
-
-Skin.assets = {
-    background = "image/ui/menu_background.png",
-    panel = "image/ui/panel.png",
-    primary = "image/ui/button_primary.png",
-    secondary = "image/ui/button_secondary.png",
-    portrait = "image/ui/portrait_frame.png",
-    computer = "image/ui/computer_bezel.png",
-    computerStand = "image/ui/computer_stand.png",
-    employeeBadge = "image/ui/employee_badge.png",
-}
-
--- Explicit aliases retain existing gameplay rarity keys without purple/blue slabs.
 Skin.colors = {
-    bg = { 19, 35, 46, 255 }, navy = { 24, 43, 55, 255 },
-    surface = { 239, 226, 197, 255 }, paper = { 247, 237, 215, 255 },
-    ink = { 54, 44, 37, 255 }, white = { 54, 44, 37, 255 },
-    cream = { 250, 240, 217, 255 }, muted = { 119, 104, 87, 255 },
-    line = { 154, 125, 90, 255 }, wood = { 113, 78, 53, 255 },
-    teal = { 33, 114, 107, 255 }, pink = { 174, 66, 93, 255 },
-    gold = { 151, 101, 39, 255 }, purple = { 51, 78, 92, 255 },
-    lightMuted = { 193, 199, 187, 255 },
+    bg = { 17, 26, 46, 225 }, navy = { 38, 43, 67, 240 },
+    surface = { 255, 240, 213, 255 }, paper = { 255, 245, 222, 255 },
+    ink = { 62, 53, 87, 255 }, white = { 62, 53, 87, 255 },
+    cream = { 255, 240, 207, 255 }, muted = { 117, 102, 125, 255 },
+    line = { 156, 141, 177, 255 }, wood = { 78, 84, 132, 255 },
+    teal = { 39, 114, 161, 255 }, pink = { 183, 64, 100, 255 },
+    gold = { 166, 96, 39, 255 }, purple = { 117, 96, 173, 255 },
+    lightMuted = { 204, 211, 231, 255 }, hp = { 255, 107, 133, 255 },
+    xp = { 101, 217, 255, 255 }, yellow = { 255, 207, 103, 255 },
 }
-
--- Widget:RenderSlicedImage reads indexed {top, right, bottom, left}; named keys are not honored.
-local PANEL_SLICE = { 18, 18, 18, 18 }
-local BUTTON_SLICE = { 12, 12, 12, 12 }
-local FRAME_SLICE = { 12, 12, 12, 12 }
-
----@param props table?
----@param defaults table
----@return table
-local function Merge(props, defaults)
-    local result = {}
-    for key, value in pairs(defaults) do result[key] = value end
-    if props then for key, value in pairs(props) do result[key] = value end end
-    return result
-end
-
+Skin.assets = {} -- Kept for campaign compatibility; no old brass frame images.
+Skin.uiAssets={paper="image/ui/paper.png",notes="image/ui/notes.png",badge="image/ui/badge.png",desk="image/ui/desk.png"}
+-- Semantic accents for the office stationery theme; gameplay warning colors stay distinct.
+Skin.colors.ink={66,42,61,255};Skin.colors.muted={113,79,90,255}
+Skin.colors.surface={255,244,218,255};Skin.colors.paper={255,248,229,255}
+Skin.colors.teal={19,116,112,255};Skin.colors.pink={188,59,83,255}
+Skin.colors.gold={151,85,17,255};Skin.colors.purple={111,62,155,255}
+Skin.colors.line={186,135,103,255}
 function Skin.Init()
-    local c = Skin.colors
-    -- User art direction overrides the stock purple palette; structure still follows PixelForge.
-    local theme = UI.Theme.ExtendTheme(UI.Theme.defaultTheme, {
+    UI.Init({ scale = UI.Scale.DEFAULT, theme = UI.Theme.ExtendTheme(UI.Theme.defaultTheme, {
         fonts = {
-            { family = "sans", weights = {
-                normal = "Fonts/FusionPixel-12px-Prop-zh_hans.ttf",
-                bold = "Fonts/FusionPixel-12px-Prop-zh_hans-Bold.ttf",
-            } },
-            { family = "mono", weights = { normal = "Fonts/FusionPixel-12px-Mono-zh_hans.ttf" } },
+            {family="sans",weights={normal="Fonts/FusionPixel-12px-Prop-zh_hans.ttf",bold="Fonts/FusionPixel-12px-Prop-zh_hans-Bold.ttf"}},
+            {family="mono",weights={normal="Fonts/FusionPixel-12px-Mono-zh_hans.ttf"}},
         },
-        colors = {
-            primary = c.teal, primaryHover = { 44, 131, 119, 255 }, primaryPressed = { 25, 90, 86, 255 },
-            secondary = c.wood, secondaryHover = { 137, 98, 66, 255 }, secondaryPressed = { 88, 62, 45, 255 },
-            background = c.bg, surface = c.surface, surfaceHover = c.paper,
-            text = c.ink, textSecondary = c.muted, textDisabled = c.muted,
-            border = c.line, borderFocus = c.teal, disabled = { 201, 191, 170, 255 },
-            disabledText = { 114, 106, 94, 255 }, success = c.teal, warning = c.gold,
-            error = c.pink, info = c.navy, overlay = { 12, 21, 27, 205 },
-            heroMale = c.teal, heroFemale = c.pink, heroNavy = c.navy, heroSurface = c.paper,
-            heroMaleSurface = { 224, 230, 206, 255 }, heroFemaleSurface = { 241, 219, 206, 255 },
-        },
+        colors = { text = Skin.colors.ink, surface = Skin.colors.surface, primary = Skin.colors.yellow },
         componentDefaults = { borderRadius = 0 },
-        components = {
-            Panel = { borderRadius = 0 },
-            Button = { borderRadius = 0, height = 46, borderWidth = 0,
-                boxShadow = { { x = 2, y = 3, blur = 0, color = { 17, 24, 27, 100 } } },
-                pressedBoxShadow = false,
-            },
-            Card = { borderRadius = 0, borderWidth = 0,
-                boxShadow = { { x = 3, y = 4, blur = 0, color = { 12, 23, 30, 115 } } },
-            },
-            ProgressBar = { borderRadius = 0, height = 7, borderWidth = 1,
-                backgroundColor = { 201, 184, 156, 255 }, borderColor = c.wood },
-        },
-    })
-    UI.Init({ theme = theme, scale = UI.Scale.DEFAULT })
-    print("[UI皮肤] 米纸/木棕/深海蓝；生成图片九宫格，全控件交互")
+    }) })
 end
-
----@param name string?
----@return table
 function Skin.Color(name) return Skin.colors[name or "ink"] or Skin.colors.ink end
-
----@param text string
----@param size number?
----@param color string?
----@param extra table?
----@return Label
+local function Merge(props, defaults)
+    local r = {}; for k,v in pairs(defaults) do r[k] = v end
+    if props then for k,v in pairs(props) do r[k] = v end end; return r
+end
 function Skin.Text(text, size, color, extra)
-    return UI.Label(Merge(extra, { text = text, fontSize = size or 10.5,
-        fontColor = Skin.Color(color), fontFamily = "sans", flexShrink = 1,
-        minWidth = 0, pointerEvents = "none" }))
+    local props=Merge(extra, { text = text, fontSize = Scale.Get().px(size or 16),
+        fontColor = Skin.Color(color), fontFamily = "sans", flexShrink = 0,
+        minWidth = 0, whiteSpace = "normal", lineHeight = 1.35 })
+    props.className=(props.className or "").." text-"..(color or "ink")
+    return UI.Label(props)
 end
-
----@param props table?
----@return Card
 function Skin.Card(props)
-    -- Final generated panel keeps brass frame detail and a warm paper-textured center.
-    return UI.Card(Merge(props, { variant = "elevated", padding = 20, gap = 12,
-        backgroundColor = Skin.colors.surface, backgroundImage = Skin.assets.panel,
-        backgroundFit = "sliced", backgroundSlice = PANEL_SLICE }))
+    return UI.Card(Merge(props, { className = "game-card", padding = Scale.Get().px(22), gap = Scale.Get().px(12),
+        backgroundColor = Skin.colors.surface, borderWidth = 2, borderColor = Skin.colors.line }))
 end
-
----@param props table?
----@return Button
+function Skin.Panel(props)
+    return UI.Panel(Merge(props, { className = "game-panel", backgroundColor = Skin.colors.navy,
+        borderWidth = 2, borderColor = {129,139,181,255} }))
+end
 function Skin.Button(props)
     local secondary = props and props.variant == "secondary"
-    local path = secondary and Skin.assets.secondary or Skin.assets.primary
-    return UI.Button(Merge(props, { variant = secondary and "secondary" or "primary",
-        backgroundImage = path, backgroundFit = "sliced", backgroundSlice = BUTTON_SLICE,
-        -- Hover and disabled opacity give real interaction feedback without synthetic page images.
-        hoverBackgroundImage = path, hoverBackgroundImageOpacity = 0.94,
-        pressedBackgroundImage = path, pressedBackgroundImageOpacity = 0.78,
-        disabledBackgroundImage = path, disabledBackgroundImageOpacity = 0.16,
-        backgroundColor = secondary and Skin.colors.wood or Skin.colors.teal,
-        disabledBackgroundColor = { 209, 198, 174, 255 },
-        textColor = Skin.colors.cream,
-        disabledTextColor = { 82, 72, 61, 255 }, fontSize = 10.5, height = 46,
-        paddingHorizontal = 14, paddingVertical = 4 }))
+    local p = Scale.Get()
+    local id=props and props.id or ""
+    local tone=props and props.tone
+    if not tone then
+        if id:find("Back")or id:find("back")or id:find("Cancel")or id:find("Clear")or id:find("Leave")then tone="coral"
+        elseif id:find("music")or id:find("Buy")or id:find("Refresh")or id:find("Resume")then tone="mint"
+        elseif secondary or id:find("sfx")then tone="lilac"else tone="yellow"end
+    end
+    local result=Merge(props, { className = secondary and "game-button secondary" or "game-button primary",
+        backgroundColor = secondary and Skin.colors.wood or Skin.colors.yellow,
+        fontColor = secondary and Skin.colors.cream or Skin.colors.ink,
+        fontSize = p.px(18), height = math.max(44,p.px(52)),
+        paddingHorizontal = p.px(16), paddingVertical = p.px(6) })
+    if result.fontSize<=12 then result.fontSize=p.px(14)end
+    result.fontSize=math.max(13,result.fontSize)
+    if result.height<=48 then result.height=math.max(44,p.px(result.height))end
+    result.className=(result.className or "game-button").." stationery-button tone-"..tone
+    return UI.Button(result)
 end
-
----@param props table?
----@return Panel
-function Skin.PortraitFrame(props)
-    return UI.Panel(Merge(props, { backgroundImage = Skin.assets.portrait,
-        backgroundFit = "sliced", backgroundSlice = FRAME_SLICE, pointerEvents = "none" }))
+-- Region cropping reads the unchanged generated PNG; no per-frame UI canvas.
+function Skin.Sprite(definition, frame, width, height, id)
+    local s = math.min(width / frame.w, height / frame.h)
+    return UI.Panel { id = id, width = width, height = height, flexShrink = 0,
+        pointerEvents = "none", alignItems = "center", justifyContent = "center", children = {
+            UI.Panel { width = frame.w * s, height = frame.h * s, pointerEvents = "none",
+                backgroundImage = definition.path, backgroundFit = "contain",
+                backgroundFrame = { x = frame.x, y = frame.y, w = frame.w, h = frame.h,
+                    atlasW = definition.width, atlasH = definition.height } },
+        } }
 end
-
----@return Panel
-function Skin.Rule()
-    return UI.Panel { height = 1, width = "100%", backgroundColor = Skin.colors.line,
-        opacity = 0.55, pointerEvents = "none" }
+function Skin.Icon(kind, id, width, height, widgetId)
+    local d = assert(Icons[kind], "Unknown icon kind")
+    local frame = d.frames[id]
+    if not frame then
+        -- S2 防御：未知帧降级为空 Panel（不再 assert 崩 HUD）。
+        return UI.Panel { id = widgetId, width = width, height = height, flexShrink = 0, pointerEvents = "none" }
+    end
+    return Skin.Sprite(frame.sheet or d, frame, width, height, widgetId)
 end
-
----@param props table?
----@return Panel
-function Skin.Background(props)
-    return UI.Panel(Merge(props, { width = "100%", height = "100%",
-        backgroundImage = Skin.assets.background, backgroundFit = "cover",
-        backgroundColor = Skin.colors.navy, pointerEvents = "none" }))
+function Skin.Hero(id, width, height, widgetId)
+    local d = HeroSprites[id].directions
+    return Skin.Sprite(d,d.frames.downIdle[1],width,height,widgetId)
 end
-
+function Skin.Avatar(id,width,height,widgetId)
+    if id=="fufu"then local d=require("FufuArt").sheets.portrait;return Skin.Sprite(d,d.portraitRegion,width,height,widgetId)end
+    local d=HeroSprites[id].directions;local f=d.frames.downIdle[1]
+    return Skin.Sprite(d,{x=f.x,y=f.y,w=f.w,h=math.floor(f.h*.56)},width,height,widgetId)
+end
+function Skin.PortraitFrame(props) return Skin.Panel(props) end
+function Skin.Rule() return UI.Panel { width = "100%", height = 1, backgroundColor = Skin.colors.line, pointerEvents = "none" } end
+function Skin.Background(props) return UI.Panel(Merge(props,{width="100%",height="100%",pointerEvents="none"})) end
 return Skin

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>下班！别挡我</title>
+<link rel="stylesheet" href="css/game.css">
+<link rel="stylesheet" href="css/expansion.css">
+<link rel="stylesheet" href="css/mobile-layout.css">
+<style>
+  html, body { margin:0; padding:0; height:100%; overflow:hidden; background:#131e2e; }
+  #app { position:fixed; left:var(--game-left,0px); top:var(--game-top,0px); width:var(--game-width,100vw); height:var(--game-height,100dvh); touch-action:auto; -webkit-user-select:none; user-select:none;
+         font-family:"FusionPixel", monospace; image-rendering:pixelated; }
+  #app canvas { position:absolute; inset:0; width:100%; height:100%; display:block; image-rendering:pixelated; touch-action:none; }
+  #ui-root { position:absolute; inset:0; pointer-events:none; }
+  #ui-root > * { pointer-events:auto; }
+  #loadbar { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:min(60vw,420px);
+             color:#efe2c5; font-size:14px; text-align:center; pointer-events:none; }
+  #loadbar .bar { height:7px; background:#201f2c; border:1px solid #9a7d5a; margin-top:8px; }
+  #loadbar .fill { height:100%; width:0%; background:#21726b; }
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="game-canvas"></canvas>
+  <div id="ui-root"></div>
+  <div id="loadbar"><div id="load-label">加载中…</div><div class="bar"><div class="fill" id="load-fill"></div></div></div>
+</div>
+<script src="js/mobile-display.js"></script>
+<script src="vendor/fengari-web.js"></script>
+<script src="js/manifest.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/gfx.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/engine.js"></script>
+</body>
+</html>

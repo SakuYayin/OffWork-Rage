@@ -1,0 +1,18 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),{chromium}=require('playwright-core');
+(async()=>{const b=await chromium.launch({executablePath:process.env.CHROME_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});try{
+ const p=await b.newPage(),errors=[];p.setDefaultTimeout(20000);p.on('pageerror',e=>errors.push(e.message));p.on('console',m=>{if(m.type()==='error'&&!m.text().includes('404'))errors.push(m.text())});
+ await p.route('**/js/manifest.js',async r=>{let s=await(await r.fetch()).text();s+='\nDSH.MANIFEST.luaSources.main=DSH.MANIFEST.luaSources.main.replace(/game = Game.New\\(selectedHeroId\\)/g,"game = Game.New(selectedHeroId) _G.__expansionTest = game");';await r.fulfill({body:s,contentType:'application/javascript'})});
+ await p.goto(process.argv[2]||'http://127.0.0.1:8027');await p.locator('#menuStart').click();
+ const dir=path.resolve(process.argv[3]||'evidence/expansion-2026-11-07');fs.mkdirSync(dir,{recursive:true});
+ for(const [id,name]of[['Male','陈准'],['Female','林夏'],['Intern','许宁'],['Programmer','周序']]){await p.locator('#heroSelect'+id).click();await p.locator('#heroSelectedSummary').filter({hasText:name}).waitFor();}
+ await p.screenshot({path:path.join(dir,'四人工牌.png')});await p.locator('#heroConfirm').click();await p.locator('#gameOverlay').waitFor({state:'hidden'});
+ const call=async s=>{const r=await p.evaluate(s=>DSH.Engine._fengari.doString('local G=require("Game") local g=__expansionTest '+s),s);assert(r.ok,r.error);return r.value};
+ await call('g.enemies={} g.waveTimer=999 g.xpNeed=999999');
+ for(const [w,h,label]of[[1600,900,'电脑'],[390,844,'手机竖屏'],[320,650,'小屏'],[844,390,'手机横屏']]){
+  await p.setViewportSize({width:w,height:h});await call('g.choices={G.upgradeDefs[3],G.upgradeDefs[4],G.upgradeDefs[5],G.upgradeDefs[6],G.upgradeDefs[7]} g.mode="upgrade" g.uiRevision=g.uiRevision+1');await p.locator('#upgradeConfirm').waitFor();
+  const before=await call('return g.upgrades.speed or 0');await p.locator('#upgradeChoose2').click();await p.locator('#upgradeDetailTitle').filter({hasText:'到点就跑'}).waitFor();assert.equal(await call('return g.mode'),'upgrade');assert.equal(await call('return g.upgrades.speed or 0'),before,'Index click must not apply buff');
+  const rect=await p.locator('#upgradeConfirm').boundingBox();assert(rect&&rect.x>=0&&rect.y>=0&&rect.x+rect.width<=w+1&&rect.y+rect.height<=h+1,'Confirm always in viewport '+label);await p.screenshot({path:path.join(dir,label+'-文件夹BUFF.png')});await p.locator('#upgradeConfirm').click();await p.locator('#gameOverlay').waitFor({state:'hidden'});assert.equal(await call('return g.upgrades.speed'),before+1,'Confirm applies exactly once');
+ }
+ await call('g.choices={G.upgradeDefs[3],G.upgradeDefs[4],G.upgradeDefs[5]} g.mode="upgrade" g.uiRevision=g.uiRevision+1');await p.locator('#upgradeConfirm').waitFor();const attack=await call('return g.upgrades.attack or 0');await p.keyboard.press('3');assert.equal(await call('return g.upgradeSelectedIndex'),3);assert.equal(await call('return g.upgrades.attack or 0'),attack);await p.keyboard.press('Enter');await p.locator('#gameOverlay').waitFor({state:'hidden'});assert.equal(await call('return g.upgrades.attack'),attack+1);
+ assert.deepEqual(errors,[]);fs.writeFileSync(path.join(dir,'ui-regression.json'),JSON.stringify({errors,cases:['4 hero badges','index does not award','confirm awards once','desktop and 3 small viewport confirmations','number key selects; Enter awards']},null,2));console.log('PASS: 4 heroes, index/details/confirm, keyboard and responsive action visibility');
+}finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});

@@ -1,6 +1,21 @@
 -- 办公室动作游戏的模型生成音频；资源根目录已包含 assets，无需重复前缀。
 -- 初始化只准备音源；开始游玩、开局或确认操作后才启动背景音乐。
 -- 网页自动播放未验证；浏览器和设备的手势解锁由引擎处理。
+--
+-- cue 对照表（path 均为 audio/sfx/ 下 office_*.wav 复用；g=gain p=pitch v=variation cd=cooldown pri=priority）
+-- swing:   keyboard_swing g0.36 p1    v0.06 cd0.10 pri2 | hit:    keyboard_hit  g0.58 p1    v0.07 cd0.055 pri4
+-- staple:  stapler_click  g0.40 p1    v0.04 cd0.065 pri3 | hurt:   player_hurt   g0.55 p1    v0.03 cd0.12 pri7
+-- burst:   rage_burst     g0.60 p1    v0    cd0.25 pri9 | pickup: xp_pickup     g0.23 p1    v0.07 cd0.065 pri1
+-- upgrade: level_up       g0.48 p1    v0    cd0.25 pri8 | walking: footstep_walk g0.24 p1    v0.05 cd0.16 pri0
+-- running: footstep_run   g0.30 p1    v0.07 cd0.12 pri0 | door:   door_open     g0.44 p1    v0    cd0.30 pri5
+-- choose:  ui_confirm     g0.34 p1    v0    cd0.08 pri5 | coffee: keyboard_swing g0.24 p0.80 v0.03 cd0.15 pri2
+-- boss:    rage_burst     g0.52 p0.86 v0    cd0.50 pri9 | start:  door_open     g0.44 p1    v0    cd0.25 pri6
+-- win:     level_up       g0.52 p1.05 v0    cd0.35 pri9 |
+-- thermosSwing: keyboard_swing g0.72 p0.78 v0.08 cd0.06 pri2 | thermosHit: keyboard_hit g0.85 p0.72 v0.10 cd0.05 pri3
+-- paperclipShot: stapler_click g0.5 p1.32 v0.10 cd0.04 pri1 | pieThrow: keyboard_swing g0.6 p0.62 v0.06 cd0.10 pri1
+-- pieBoom: rage_burst g0.7 p0.66 v0.05 cd0.12 pri2 | slam: rage_burst g1.0 p0.52 v0.03 cd0.2 pri4
+-- scan: level_up g0.55 p1.42 v0.04 cd0.2 pri2 | charge: footstep_run g0.5 p0.70 v0.06 cd0.3 pri1
+-- explode: keyboard_hit g0.9 p0.55 v0.08 cd0.15 pri3 | step_walk: footstep_walk g0.24 p1 v0.05 cd0.16 pri0 | step_run: footstep_run g0.30 p1 v0.07 cd0.12 pri0
 local Audio = {}
 
 ---@class OfficeAudioPlayer
@@ -83,6 +98,17 @@ local cues = {
     boss = { path = "audio/sfx/office_rage_burst.wav", gain = 0.52, pitch = 0.86, variation = 0, cooldown = 0.50, priority = 9 },
     start = { path = "audio/sfx/office_door_open.wav", gain = 0.44, pitch = 1, variation = 0, cooldown = 0.25, priority = 6 },
     win = { path = "audio/sfx/office_level_up.wav", gain = 0.52, pitch = 1.05, variation = 0, cooldown = 0.35, priority = 9 },
+    thermosSwing = { path = "audio/sfx/office_keyboard_swing.wav", gain = 0.72, pitch = 0.78, variation = 0.08, cooldown = 0.06, priority = 2 },
+    thermosHit = { path = "audio/sfx/office_keyboard_hit.wav", gain = 0.85, pitch = 0.72, variation = 0.10, cooldown = 0.05, priority = 3 },
+    paperclipShot = { path = "audio/sfx/office_stapler_click.wav", gain = 0.5, pitch = 1.32, variation = 0.10, cooldown = 0.04, priority = 1 },
+    pieThrow = { path = "audio/sfx/office_keyboard_swing.wav", gain = 0.6, pitch = 0.62, variation = 0.06, cooldown = 0.10, priority = 1 },
+    pieBoom = { path = "audio/sfx/office_rage_burst.wav", gain = 0.7, pitch = 0.66, variation = 0.05, cooldown = 0.12, priority = 2 },
+    slam = { path = "audio/sfx/office_rage_burst.wav", gain = 1.0, pitch = 0.52, variation = 0.03, cooldown = 0.2, priority = 4 },
+    scan = { path = "audio/sfx/office_level_up.wav", gain = 0.55, pitch = 1.42, variation = 0.04, cooldown = 0.2, priority = 2 },
+    charge = { path = "audio/sfx/office_footstep_run.wav", gain = 0.5, pitch = 0.70, variation = 0.06, cooldown = 0.3, priority = 1 },
+    explode = { path = "audio/sfx/office_keyboard_hit.wav", gain = 0.9, pitch = 0.55, variation = 0.08, cooldown = 0.15, priority = 3 },
+    step_walk = { path = "audio/sfx/office_footstep_walk.wav", gain = 0.24, pitch = 1, variation = 0.05, cooldown = 0.16, priority = 0 },
+    step_run = { path = "audio/sfx/office_footstep_run.wav", gain = 0.30, pitch = 1, variation = 0.07, cooldown = 0.12, priority = 0 },
 }
 
 ---@param voice OfficeMusicVoice
